@@ -360,6 +360,7 @@
 	(setq org-roam-directory "~/Documentos/org-roam"))
 
 (use-package org-roam-server
+	:if window-system
 	:init (org-roam-server-mode)
 	:after org-roam
   :config
@@ -517,6 +518,8 @@
 
 (use-package flyspell-correct-ivy
 	:after flyspell)
+
+(setq-default ispell-program-name "aspell")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; yaml-mode
@@ -778,6 +781,7 @@ This command does not push text to `kill-ring'."
 ;;; Olivetti
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package olivetti
+	:if window-system
   :diminish
   :config
   ;;(setq olivetti-body-width 0.7)
@@ -822,6 +826,7 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
 ;;; auto-dim
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package auto-dim-other-buffers
+	:if window-system
   :init (auto-dim-other-buffers-mode t)
   :config
   (setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
@@ -830,28 +835,35 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DOOM theme
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package doom-themes
-	:config
-	;; Global settings (defaults)
-	(setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
-				doom-themes-enable-italic t) ; if nil, italics is universally disabled
-	(load-theme 'doom-laserwave t)
+(if window-system
+		(progn
+			(use-package doom-themes
+				:if window-system
+				:config
+				;; Global settings (defaults)
+				(setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
+							doom-themes-enable-italic t) ; if nil, italics is universally disabled
+				(load-theme 'doom-laserwave t)
 
-	;; Enable flashing mode-line on errors
-	(doom-themes-visual-bell-config)
+				;; Enable flashing mode-line on errors
+				(doom-themes-visual-bell-config)
 
-	;; Enable custom neotree theme (all-the-icons must be installed!)
-	(doom-themes-neotree-config)
+				;; Enable custom neotree theme (all-the-icons must be installed!)
+				(doom-themes-neotree-config)
 
-	;; or for treemacs users
-	(setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-	(doom-themes-treemacs-config)
+				;; or for treemacs users
+				(setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+				(doom-themes-treemacs-config)
 
-	;; Corrects (and improves) org-mode's native fontification.
-	(doom-themes-org-config)
+				;; Corrects (and improves) org-mode's native fontification.
+				(doom-themes-org-config)
 
-	;; Update neotree working dir
-	(setq neo-smart-open t))
+				;; Update neotree working dir
+				(setq neo-smart-open t)))
+
+	(use-package modus-operandi-theme
+		:config
+		(load-theme 'modus-operandi t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DOOM Modeline
@@ -919,7 +931,7 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-	 '("37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "1d904ba8343822dff21ffae28a348975eafeb0734034ed5fa33d78bf2519e7cb" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" default))
+	 '("990e24b406787568c592db2b853aa65ecc2dcd08146c0d22293259d400174e37" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "1d904ba8343822dff21ffae28a348975eafeb0734034ed5fa33d78bf2519e7cb" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" default))
  '(package-selected-packages
 	 '(focus org-roam-server org-roam emacsql-sqlite3 outshine major-mode-hydra outline-minor-faces auto-dim-other-buffers olivetti yaml-mode writegood-mode which-key vterm vlf vimish-fold use-package tabbar rainbow-delimiters origami org-bullets neotree modus-operandi-theme markdown-mode json-mode ivy-rich ivy-posframe imenu-list git-commit general fold-this flyspell-correct-ivy flycheck-pyflakes esup doom-themes doom-modeline diminish dashboard counsel company clang-format centaur-tabs beacon autopair auto-package-update auctex amx))
  '(safe-local-variable-values

@@ -5,8 +5,8 @@
 (setq frame-inhibit-implied-resize t)
 
 ;; Disable the menu bar since we don't use it
-;;(when (and (not (eq system-type 'darwin)) (fboundp 'menu-bar-mode))
-;;	(menu-bar-mode -1))
+(when (and (not (eq system-type 'darwin)) (fboundp 'menu-bar-mode))
+	(menu-bar-mode -1))
 
 ;; Disable the toolbar at the top since it's useless
 ;; (if (functionp 'tool-bar-mode) (tool-bar-mode -1))
