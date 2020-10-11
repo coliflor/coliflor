@@ -14,12 +14,12 @@
 (require 'package)
 ;;(setq package-enable-at-startup nil)
 (setq package-archives '(("org"   . "http://orgmode.org/elpa/")
-                         ("melpa" . "https://melpa.org/packages/")))
+												 ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 
 ;; update packages list if we are on a new install
 (unless package-archive-contents
-  (package-refresh-contents))
+	(package-refresh-contents))
 
 (setq use-package-always-ensure t)
 
@@ -27,11 +27,11 @@
 ;;; Update pacakges
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package auto-package-update
-  :ensure t
-  :config
-  (setq auto-package-update-delete-old-versions t
-        auto-package-update-interval 4)
-  (auto-package-update-maybe))
+	:ensure t
+	:config
+	(setq auto-package-update-delete-old-versions t
+				auto-package-update-interval 4)
+	(auto-package-update-maybe))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Start emacs server if not already running
@@ -184,6 +184,9 @@
 (set-fringe-mode 10)
 (setq mode-line-format 1)
 
+;; Visualize spaces, tabs and newline
+(add-hook 'prog-mode-hook 'whitespace-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; HideShow is a minor mode similar to OutlineMode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -285,12 +288,26 @@
 	(beacon-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; simple-mpc A GNU Emacs major mode that acts as a front end to mpc.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package simple-mpc
+	:init
+		(eval-when-compile
+		;; Silence missing function warnings
+		(declare-function simple-mpc "simple-mpc-mode.el")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Clang-format
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Create clang-format file using google style
 ;; clang-format -style=google -dump-config > .clang-format
 ;; clang-format -style=llvm -dump-config > .clang-format
 (use-package clang-format)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Magit
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package magit)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Configure flycheck
@@ -363,18 +380,18 @@
 	:if window-system
 	:init (org-roam-server-mode)
 	:after org-roam
-  :config
-  (setq org-roam-server-host "127.0.0.1"
-        org-roam-server-port 8081
-        org-roam-server-authenticate nil
-        org-roam-server-export-inline-images t
-        org-roam-server-serve-files nil
-        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-        org-roam-server-network-poll t
-        org-roam-server-network-arrows nil
-        org-roam-server-network-label-truncate t
-        org-roam-server-network-label-truncate-length 60
-        org-roam-server-network-label-wrap-length 20))
+	:config
+	(setq org-roam-server-host "127.0.0.1"
+				org-roam-server-port 8081
+				org-roam-server-authenticate nil
+				org-roam-server-export-inline-images t
+				org-roam-server-serve-files nil
+				org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+				org-roam-server-network-poll t
+				org-roam-server-network-arrows nil
+				org-roam-server-network-label-truncate t
+				org-roam-server-network-label-truncate-length 60
+				org-roam-server-network-label-wrap-length 20))
 
 ;; org-protocol intercepts calls from emacsclient to trigger custom actions
 (require 'org-protocol)
@@ -404,7 +421,7 @@
 ;;; amx:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package amx :defer 0.5
-  :config (amx-mode))
+	:config (amx-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; ivy/counsel
@@ -674,7 +691,7 @@ This command does not push text to `kill-ring'."
 	 "<C-mouse-4>"   'font-big                 ;; big buffer resize
 	 ;; centaur
 	 "<XF86Back>"    'centaur-tabs-backward    ;; cicle buffers backwards
-	 "<XF86Forward>" 'centaur-tabs-forward 	   ;; cicle buffers forward
+	 "<XF86Forward>" 'centaur-tabs-forward     ;; cicle buffers forward
 	 ;;cut,copy,paste,delete
 	 "<XF86Cut>"     'clipboard-kill-region    ;; cut text
 	 "<XF86Copy>"    'clipboard-kill-ring-save ;; copy text
@@ -686,8 +703,8 @@ This command does not push text to `kill-ring'."
 	 "<f9>"          'flyspell-correct-next    ;; flyspell next
 	 "<f10>"         'ispell-change-dictionary ;; change dictionary
 	 ;;
-	 "<mouse-3>"     'menu-bar-open 	         ;; open left mouse menu
-	 "C-x C-z"       'suspend-frame 	         ;; rebind suspend-frame
+	 "<mouse-3>"     'menu-bar-open            ;; open left mouse menu
+	 "C-x C-z"       'suspend-frame            ;; rebind suspend-frame
 	 "<C-tab>"       'hs-toggle-hiding         ;; toggle codeblock
 	 ;;windowmove
 	 "M-a"           'windmove-left            ;; window move left
@@ -702,9 +719,9 @@ This command does not push text to `kill-ring'."
 	 "C-x B"         'ivy-switch-buffer-other-window
 	 "C-x b"         'ivy-switch-buffer
 	 ;;C-z prefix
-	 "C-z z"         'indent-buffer 	         ;; indent buffer
-	 "C-z o"         'coliflor/olivetti-mode 	 ;; light read mode
-	 "C-z l"         'linum-mode 	             ;; line numbers
+	 "C-z z"         'indent-buffer            ;; indent buffer
+	 "C-z o"         'coliflor/olivetti-mode   ;; light read mode
+	 "C-z l"         'linum-mode               ;; line numbers
 	 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -740,7 +757,6 @@ This command does not push text to `kill-ring'."
 ;; https://github.com/seagle0128/.emacs.d/blob/1973724b355d6e9a34f74f116ccc429fb0bd0822/lisp/init-dashboard.el
 ;; TODO: usar centaur-dashboard como referencia
 (use-package dashboard
-	:ensure t
 	:config
 	;; Set the banner
 	(setq dashboard-startup-banner "~/Proyectos/coliflor/img/salticida.es.min.png")
@@ -782,33 +798,32 @@ This command does not push text to `kill-ring'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package olivetti
 	:if window-system
-  :diminish
-  :config
-  ;;(setq olivetti-body-width 0.7)
-  (setq olivetti-minimum-body-width 100)
-  ;;(setq olivetti-recall-visual-line-mode-entry-state t)
+	:diminish
+	:config
+	;;(setq olivetti-body-width 0.7)
+	(setq olivetti-minimum-body-width 100)
+	;;(setq olivetti-recall-visual-line-mode-entry-state t)
 	(define-minor-mode coliflor/olivetti-mode
 		"Toggle buffer-local `olivetti-mode' with additional parameters.
 Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar."
-    :init-value nil
-    :global nil
-    (if coliflor/olivetti-mode
-        (progn
-          (olivetti-mode 1)
-          (set-window-fringes (selected-window) 0 0)
+		:init-value nil
+		:global nil
+		(if coliflor/olivetti-mode
+				(progn
+					(olivetti-mode 1)
+					(set-window-fringes (selected-window) 0 0)
 					(setq cursor-type 'bar)
 					(load-theme 'doom-solarized-light)
 					(doom-modeline-mode -1)
 					(setq mode-line-format nil)
 					(centaur-tabs-mode -1))
-      (olivetti-mode -1)
-      (set-window-fringes (selected-window) nil) ; Use default width
+			(olivetti-mode -1)
+			(set-window-fringes (selected-window) nil) ; Use default width
 			(setq cursor-type 'box)
 			(load-theme 'doom-laserwave)
 			(setq mode-line-format 1)
 			(doom-modeline-mode 1)
 			(centaur-tabs-mode 1))))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Outshine
@@ -816,7 +831,6 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
 (use-package outshine
 	:init (outshine-mode 1)
 	:config
-
 	(add-hook 'emacs-lisp-mode-hook 'outshine-mode)
 
 	;; Enables outline-minor-mode for *ALL* programming buffers
@@ -827,10 +841,10 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package auto-dim-other-buffers
 	:if window-system
-  :init (auto-dim-other-buffers-mode t)
-  :config
-  (setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
-  (setq auto-dim-other-buffers-dim-on-focus-out t))
+	:init (auto-dim-other-buffers-mode t)
+	:config
+	(setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
+	(setq auto-dim-other-buffers-dim-on-focus-out t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DOOM theme
@@ -841,7 +855,7 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
 				:if window-system
 				:config
 				;; Global settings (defaults)
-				(setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
+				(setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
 							doom-themes-enable-italic t) ; if nil, italics is universally disabled
 				(load-theme 'doom-laserwave t)
 
@@ -906,8 +920,8 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
 
 ;; Header Line
 (defun header-line-render (left right)
-  (let* ((available-width (- (window-total-width) (length left) )))
-    (format (format "%%s%%%ds" available-width) left right)))
+	(let* ((available-width (- (window-total-width) (length left) )))
+		(format (format "%%s%%%ds" available-width) left right)))
 
 (setq-default header-line-format
 							'((:eval
@@ -919,8 +933,8 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
 									(format-mode-line
 									 (list " %l:%c "))))))
 
-;;disabled
-;;(setq header-line-format nil)
+;; disabled
+;; (setq header-line-format nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; auto generated variables
@@ -931,9 +945,9 @@ Fringes are disabled.  The modeline is hidden, The cursor becomes a blinking bar
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-	 '("990e24b406787568c592db2b853aa65ecc2dcd08146c0d22293259d400174e37" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "1d904ba8343822dff21ffae28a348975eafeb0734034ed5fa33d78bf2519e7cb" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" default))
+	 '("b72ffe34e9ff6ec347cb8fc86d3f214e999363d46022e784324f2a4fe60dcff4" "990e24b406787568c592db2b853aa65ecc2dcd08146c0d22293259d400174e37" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "1d904ba8343822dff21ffae28a348975eafeb0734034ed5fa33d78bf2519e7cb" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" default))
  '(package-selected-packages
-	 '(focus org-roam-server org-roam emacsql-sqlite3 outshine major-mode-hydra outline-minor-faces auto-dim-other-buffers olivetti yaml-mode writegood-mode which-key vterm vlf vimish-fold use-package tabbar rainbow-delimiters origami org-bullets neotree modus-operandi-theme markdown-mode json-mode ivy-rich ivy-posframe imenu-list git-commit general fold-this flyspell-correct-ivy flycheck-pyflakes esup doom-themes doom-modeline diminish dashboard counsel company clang-format centaur-tabs beacon autopair auto-package-update auctex amx))
+	 '(simple-mpc focus org-roam-server org-roam emacsql-sqlite3 outshine major-mode-hydra outline-minor-faces auto-dim-other-buffers olivetti yaml-mode writegood-mode which-key vterm vlf vimish-fold use-package tabbar rainbow-delimiters origami org-bullets neotree modus-operandi-theme markdown-mode json-mode ivy-rich ivy-posframe imenu-list git-commit general fold-this flyspell-correct-ivy flycheck-pyflakes esup doom-themes doom-modeline diminish dashboard counsel company clang-format centaur-tabs beacon autopair auto-package-update auctex amx))
  '(safe-local-variable-values
 	 '((eval setq ispell-local-dictionary "english")
 		 (eval outline-hide-body)))
