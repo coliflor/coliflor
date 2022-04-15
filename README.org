@@ -1,10 +1,1 @@
-org-roam requieres: sqlite
 
-termux:
-pkg install sqlite
-
-
-fly-spell requieres: aspell
-
-termux:
-pkg install aspell
