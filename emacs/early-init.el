@@ -5,8 +5,8 @@
 (setq frame-inhibit-implied-resize t)
 
 ;; Disable the menu bar since we don't use it
-(when (and (not (eq system-type 'darwin)) (fboundp 'menu-bar-mode))
-	(menu-bar-mode -1))
+;; (when (and (not (eq system-type 'darwin)) (fboundp 'menu-bar-mode))
+;;	(menu-bar-mode -1))
 
 ;; Disable the toolbar at the top since it's useless
 ;; (if (functionp 'tool-bar-mode) (tool-bar-mode -1))
@@ -21,21 +21,18 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
-
 ;; It disables tooltips via GTK+
-(setq x-gtk-use-system-tooltips nil)
+;; NOTE: currently not using GTK+
+;;(setq x-gtk-use-system-tooltips nil)
 
 (setq use-file-dialog nil)
 (setq use-dialog-box t)
 
 ;; I don't care to see the splash screen
-(setq inhibit-splash-screen t)
+;;(setq inhibit-splash-screen t)
 
 ;; Don't show *Buffer list* when opening multiple files at the same time.
-(setq inhibit-startup-buffer-menu t)
-
-;; Makes *scratch* empty.
-(setq initial-scratch-message "")
+;; (setq inhibit-startup-buffer-menu t)
 
 ;; Disable bar for early launch then we start doom-modeline
 (setq mode-line-format nil)
@@ -55,15 +52,16 @@
 ;; Removes *Completions* from buffer after you've opened a file.
 (add-hook 'minibuffer-exit-hook
 					'(lambda ()
+
 						 (let ((buffer "*Completions*"))
 							 (and (get-buffer buffer)
 										(kill-buffer buffer)))))
 
 ;; background color for early boot
-(add-to-list 'default-frame-alist '(background-color . "#27212E"))
+(add-to-list 'default-frame-alist '(background-color . "#fff"))
 
 ;; Supress cl warning
-(setq byte-compile-warnings '(cl-functions))
+;;(setq byte-compile-warnings '(cl-functions))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; By default Emacs triggers garbage collection at ~0.8MB which makes
@@ -71,16 +69,23 @@
 ;;; we increase it during initialization.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun my-minibuffer-setup-hook ()
-  (setq gc-cons-threshold most-positive-fixnum))
+(setq gc-cons-threshold-original gc-cons-threshold)
+(setq gc-cons-threshold (* 1024 1024 100))
 
-(defun my-minibuffer-exit-hook ()
-  (setq gc-cons-threshold 800000))
+;; Set file-name-handler-alist
+(setq file-name-handler-alist-original file-name-handler-alist)
+(setq file-name-handler-alist nil)
 
-(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
-(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+	 (setq gc-cons-threshold gc-cons-threshold-original)
+	 (setq file-name-handler-alist file-name-handler-alist-original)
+	 (setq gc-cons-threshold (* 1024 1024 20))
+	 (makunbound 'file-name-handler-alist-original)
+	 (message "gc-cons-threshold and file-name-handler-alist restored")))
 
 ;; Extra plugins and config files are stored here
-(if (not (file-directory-p "~/.emacs.d/plugins/"))
-    (make-directory "~/.emacs.d/plugins/"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/plugins"))
+(if (not (file-directory-p "~/.config/emacs/plugins/"))
+		(make-directory "~/.config/emacs/plugins/"))
+(add-to-list 'load-path (expand-file-name "~/.config/emacs/plugins"))
