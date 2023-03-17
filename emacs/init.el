@@ -1,20 +1,8 @@
-
-;; $$$$$$$$\                                             $$\           $$\  $$\
-;; $$  _____|                                             \__|          \__| $$ |
-;; $$ |     $$$$$$\$$$$\   $$$$$$\   $$$$$$$\  $$$$$$$\  $$\ $$$$$$$\  $$\$$$$$$\
-;; $$$$$\   $$  _$$  _$$\  \____$$\ $$  _____|$$  _____| $$ |$$  __$$\ $$ \_$$  _|
-;; $$  __|  $$ / $$ / $$ | $$$$$$$ |$$ /      \$$$$$$\   $$ |$$ |  $$ |$$ | $$ |
-;; $$ |     $$ | $$ | $$ |$$  __$$ |$$ |       \____$$\  $$ |$$ |  $$ |$$ | $$ |$$\
-;; $$$$$$$$\$$ | $$ | $$ |\$$$$$$$ |\$$$$$$$\ $$$$$$$  | $$ |$$ |  $$ |$$ | \$$$$  |
-;; \________\__| \__| \__| \_______| \_______|\_______/  \__|\__|  \__|\__|  \____/
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Sets custom user directory
+ ;;; Sets custom user directory
 (setq user-emacs-directory "~/.config/emacs")
 (add-to-list 'load-path "~/.config/emacs/lisp/")
 
 ;;; Set packages to install
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package configs
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -30,9 +18,7 @@
 (defvar use-package-always-ensure t)
 (defvar use-package-verbose nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Update pacakges
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package auto-package-update
 	:defer 0.8
 	:ensure f
@@ -44,17 +30,13 @@
 	(add-hook 'auto-package-update-before-hook
 						(lambda () (message "I will update packages now"))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Start emacs server if not already running
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package server
 	:config
 	(server-start))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Esup: Emacs StartUp Profiler
 ;;       - Profile the load time of the Emacs init file
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package esup
 	:disabled t
 	:init
@@ -69,9 +51,7 @@
 											 (time-subtract after-init-time before-init-time)))
 							gcs-done))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NeoTree
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; M-x all-the-icons-install-fonts and fc-cache -f -v
 (use-package all-the-icons)
 (use-package neotree
@@ -80,9 +60,7 @@
 	:config
 	(setq all-the-icons-scale-factor 0.7))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; General Tweaks
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package emacs
 	:config
 	(setq initial-scratch-message "")    ;; Makes *scratch* empty.
@@ -97,7 +75,7 @@
 (use-package scroll-bar
 	:ensure f
 	:config
-	(scroll-bar-mode -1))
+	(scroll-bar-mode 1))
 
 (use-package frame
 	:ensure f
@@ -289,8 +267,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DOOM theme
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (progn
 	(use-package doom-themes
 		:if window-system
@@ -320,11 +296,10 @@
 		;; Update neotree working dir
 		(defvar neo-smart-open t)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DOOM Modeline
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package doom-modeline
-	:init (doom-modeline-mode 1)
+	:ensure t
+	:init (doom-modeline 1)
 	:config
 	;; How tall the mode-line should be
 	;; (setq doom-modeline-height 10)
@@ -383,7 +358,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Centaur tabs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package centaur-tabs
 	:defer 0.8
 	:ensure t
@@ -431,9 +405,7 @@
 						(not (file-name-extension name)))
 			 ))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; HideShow is a minor mode similar to OutlineMode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package hideshow
 	:defer 0.8
 	:init
@@ -447,25 +419,17 @@
 							(java-mode "{" "}" "/[*/]" nil nil)
 							(js-mode "{" "}" "/[*/]" nil)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Async - library for async/thread processing
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package async)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; S is used by origami, etc and sometimes during Emacs
 ;; upgrades disappears so we try to install it on its own.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package s :disabled t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; F Modern API for working with files and directories
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package f :disabled)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Diminish - Hide the minor modes in the mode line for more room
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package diminish
 	:defer 0.8
 	:init
@@ -478,20 +442,14 @@
 	(diminish 'eldoc-mode)
 	(diminish 'auto-revert-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Dash A modern list api for Emacs. No 'cl required.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package dash :disabled t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Colorize color names in buffersColorize color names in buffers
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package rainbow-mode
 	:defer 0.8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Rainbow Delimiters -  have delimiters be colored by their depth
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package rainbow-delimiters
 	:defer 0.8
 	:init
@@ -500,10 +458,8 @@
 		(declare-function rainbow-delimiters-mode "rainbow-delimiters.el"))
 	(add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Beacon-mode: flash the cursor when switching buffers or scrolling
 ;;              the goal is to make it easy to find the cursor
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package beacon
 	:disabled t
 	:defer 0.8
@@ -516,9 +472,7 @@
 	(setq beacon-size 20)
 	(beacon-mode t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Simple-mpc A GNU Emacs major mode that acts as a front end to mpc.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package simple-mpc
 	:disabled t
 	:init
@@ -526,36 +480,32 @@
 		;; Silence missing function warnings
 		(declare-function simple-mpc "simple-mpc-mode.el")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Clang-format
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Create clang-format file using google style
 ;; clang-format -style=google -dump-config > .clang-format
 ;; clang-format -style=llvm -dump-config > .clang-format
 (use-package clang-format :defer 0.8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Golang
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package go-mode
 	:disabled t
 	:defer 0.8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Lua
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package lua-mode :defer 0.8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Java
+(use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
+(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+(use-package dap-java :ensure nil)
+
+
 ;;; Magit
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package magit
 	:disabled t
 	:defer 0.8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Configure flycheck
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Note: For C++ we use flycheck with LSP mode
 (use-package flycheck
 	:diminish flycheck-mode
@@ -578,15 +528,10 @@
 
 (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; EmacsSql
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package emacsql-sqlite3 :defer 0.8)
 (use-package emacsql :defer 0.8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Org-Mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (with-eval-after-load 'org
 	(setq org-log-done 'time
 				org-todo-keywords '((sequence "TODO" "INPROGRESS" "CANCELLED" "DONE"))
@@ -682,54 +627,19 @@
           org-roam-ui-open-on-start t))
 
 
-;; (use-package org-roam
-;; 	:after org
-;; 	:defer '(defer-timer)
-;; 	:requires (emacsql-sqlite3 emacsql s f)
-;; 	:init
-;; 	(add-hook 'after-init-hook 'org-roam-mode)
-;; 	:config
-;; 	(setq org-roam-v2-ack t)
-;; 	(setq org-roam-index-file "~/Documentos/org-roam/20201006023712-index.org")
-;; 	(setq org-roam-directory (file-truename"~/Documentos/org-roam")))
-
-;; (use-package org-roam-server
-;; 	:if window-system
-;; 	:defer 0.8
-;; 	:after org-roam
-;; 	:config
-;; 	(setq org-roam-server-host "127.0.0.1"
-;; 				org-roam-server-port 8081
-;; 				org-roam-server-authenticate nil
-;; 				org-roam-server-export-inline-images t
-;; 				org-roam-server-serve-files nil
-;; 				org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-;; 				org-roam-server-network-poll t
-;; 				org-roam-server-network-arrows nil
-;; 				org-roam-server-network-label-truncate t
-;; 				org-roam-server-network-label-truncate-length 60
-;; 				org-roam-server-network-label-wrap-length 20)
-;; 	(org-roam-server-mode 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Vlf - handle open very large files
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package vlf
 	:disabled t
 	:defer 0.8
 	:config
 	(require 'vlf-setup))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Amx:
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package amx
 	:defer 0.8
 	:config (amx-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Ivy/counsel
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package ivy
 	:defer 0.8
 	:demand
@@ -778,10 +688,7 @@
 	;;														 'ivy-rich-switch-buffer-transformer)
 	(ivy-rich-mode 1))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Ivy-posframe
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; https://github.com/tumashu/ivy-posframe/issues/109
 (defvar exwm--connection nil)
 (defvar exwm-workspace-current-index)
@@ -826,9 +733,7 @@
 	:defer 0.8
 	:after ivy)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Flyspell Mode for Spelling Corrections
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package flyspell
 	:defer 0.8
 	:diminish flyspell-mode
@@ -857,9 +762,7 @@
 	:config
 	(setq-default ispell-program-name "aspell"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Yaml/json/markdown/asm  mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package yaml-mode
 	:defer 0.8
 	:mode ("\\.yml\\'" "\\.yaml\\'"))
@@ -873,10 +776,8 @@
 	:defer 0.8
 	:mode ("\\.md\\'" "\\.markdown\\'"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Emacs font sizing with Ctrl key and mouse scroll
 ;; https://stackoverflow.com/questions/2091881/emacs-font-sizing-with-ctrl-key-and-mouse-scroll
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package faces
 	:ensure f
 	:defer 0.8
@@ -891,10 +792,8 @@
 		(set-face-attribute 'default nil :height
 												(- (face-attribute 'default :height) 4))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Delete Word Without Copying to Clipboard/kill-ring
 ;; http://ergoemacs.org/emacs/emacs_kill-ring.html
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun my-delete-word (arg)
 	"Delete characters forward until encountering the end of a word.
 With argument, do this that many times.
@@ -932,14 +831,7 @@ This command does not push text to `kill-ring'."
 		(setq p2 (point))
 		(delete-region p1 p2)))
 
-;; bind them to emacs's default shortcut keys:
-;; (global-set-key (kbd "C-S-k") 'my-delete-line-backward) ; Ctrl+Shift+k
-;; (global-set-key (kbd "C-k") 'my-delete-line)
-;; (global-set-key (kbd "M-d") 'my-delete-word)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; General.el
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; which-key-dum-bindings to get the full list of current keybinds
 (use-package general
 	:defer 0.8
@@ -962,6 +854,7 @@ This command does not push text to `kill-ring'."
 	 "M-<tab>"    'keyboard-escape-quit
 	 "M-x"        'keyboard-escape-quit
 	 "<menu>"     'keyboard-escape-quit
+	 "<cancel>"     'keyboard-escape-quit
 	 )
 
 	(general-define-key
@@ -974,7 +867,7 @@ This command does not push text to `kill-ring'."
 	(general-define-key
 	 "<SunProps>"    'counsel-M-x              ;; M-x counsel
 	 "<XF86Open>"    'execute-extended-command ;; M-x menu key
-	 "C-s"           'swiper                   ;; search with swiper
+	 ;"C-s"           'swiper                   ;; search with swiper
 	 "<find>"        'swiper-isearch           ;; "C-r" 'swiper
 	 "C-c C-f"       'clang-format-buffer      ;; clang-format indent C code
 	 "<C-mouse-5>"   'font-small               ;; small buffer resize
@@ -999,7 +892,7 @@ This command does not push text to `kill-ring'."
 	 "<mouse-3>"     'menu-bar-open            ;; open left mouse menu
 	 "C-x C-z"       'suspend-frame            ;; rebind suspend-frame
 	 "<C-tab>"       'hs-toggle-hiding         ;; toggle codeblock
-	 ;;windowmove
+ 	 ;;windowmove
 	 "M-a"           'windmove-left            ;; window move left
 	 "M-d"           'windmove-right           ;; window move right
 	 "M-w"           'windmove-up              ;; window move up
@@ -1029,9 +922,7 @@ This command does not push text to `kill-ring'."
 
 	 ))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; goto-last-point
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://www.emacswiki.org/emacs/goto-last-point.el
 
 (use-package goto-last-point
@@ -1039,9 +930,7 @@ This command does not push text to `kill-ring'."
 	:commands (goto-last-point-mode)
 	:config (goto-last-point-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Which-key
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package which-key
 	:defer 0.8
 	:diminish which-key-mode
@@ -1053,18 +942,15 @@ This command does not push text to `kill-ring'."
 	(setq which-key-idle-delay 1)
 	(setq which-key-idle-secondary-delay 1.40))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Company
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package company
 	:defer 0.8
-	:init (global-company-mode)
 	:diminish company-mode)
 
-;; (use-package company-box
-;; 	:ensure f
-;; 	:defer 0.8
-;; 	:hook (company-mode . company-box-mode))
+(use-package company-box
+	:ensure t
+	:defer 0.8
+	:hook (company-mode . company-box-mode))
 
 (use-package company-quickhelp
 	:defer 0.8
@@ -1073,17 +959,13 @@ This command does not push text to `kill-ring'."
 ;;(use-package auto-complete
 ;;	:init (global-auto-complete-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Hydra
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package major-mode-hydra
 	:defer 0.8)
 (use-package pretty-hydra
 	:defer 0.8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Imenu-list
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package imenu-list
 	:defer 0.8
 	:config
@@ -1099,10 +981,7 @@ This command does not push text to `kill-ring'."
 								 "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
 (add-hook 'emacs-lisp-mode-hook #'coliflor/imenu-use-package)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Outshine
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package outshine
 	:defer 0.8
 	:init (outshine-mode 1)
@@ -1112,9 +991,7 @@ This command does not push text to `kill-ring'."
 	;; Enables outline-minor-mode for *ALL* programming buffers
 	(add-hook 'prog-mode-hook 'outline-minor-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Auto-dim
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package auto-dim-other-buffers
 	:disabled t
 	:if window-system
@@ -1123,9 +1000,7 @@ This command does not push text to `kill-ring'."
 	(setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
 	(setq auto-dim-other-buffers-dim-on-focus-out t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Auto generated variables
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1141,7 +1016,7 @@ This command does not push text to `kill-ring'."
  '(ansi-color-names-vector
 	 ["#5a5475" "#CC6666" "#C2FFDF" "#FFEA00" "#55b3cc" "#FFB8D1" "#96CBFE" "#F8F8F0"])
  '(custom-safe-themes
-	 '("d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "7ea491e912d419e6d4be9a339876293fff5c8d13f6e84e9f75388063b5f794d6" "a6473f7abf949f4a6a1a9cc0dd37ea2e35ba3cea65d3442b98d65c5c5c5cb8d7" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "e074be1c799b509f52870ee596a5977b519f6d269455b84ed998666cf6fc802a" "3df5335c36b40e417fec0392532c1b82b79114a05d5ade62cfe3de63a59bc5c6" "08a27c4cde8fcbb2869d71fdc9fa47ab7e4d31c27d40d59bf05729c4640ce834" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" default))
+	 '("e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554" "afa47084cb0beb684281f480aa84dab7c9170b084423c7f87ba755b15f6776ef" "d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "7ea491e912d419e6d4be9a339876293fff5c8d13f6e84e9f75388063b5f794d6" "a6473f7abf949f4a6a1a9cc0dd37ea2e35ba3cea65d3442b98d65c5c5c5cb8d7" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "e074be1c799b509f52870ee596a5977b519f6d269455b84ed998666cf6fc802a" "3df5335c36b40e417fec0392532c1b82b79114a05d5ade62cfe3de63a59bc5c6" "08a27c4cde8fcbb2869d71fdc9fa47ab7e4d31c27d40d59bf05729c4640ce834" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" default))
  '(fci-rule-color "#B8A2CE")
  '(jdee-db-active-breakpoint-face-colors (cons "#464258" "#C5A3FF"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#464258" "#C2FFDF"))
@@ -1154,7 +1029,7 @@ This command does not push text to `kill-ring'."
 		 (file . find-file)
 		 (wl . wl)))
  '(package-selected-packages
-	 '(frameshot rainbow-mode basic-mode clean-buffers minibuffer-line emacs\.\. org-download scroll-bar org-roam-protocol org-protocol org-tempo faces frame basic-theme fringe vc-hooks files simple scad-preview scad-mode go-mode vterm-toggle vterm auto-complete doom-modeline doom-themes auto-dim-other-buffers outshine imenu-list dashboard major-mode-hydra company which-key general markdown-mode json-mode yaml-mode flyspell-correct-ivy ivy-posframe ivy-rich counsel ivy amx autopair vlf org-bullets writegood-mode emacsql-sqlite3 flycheck-pyflakes flycheck magit clang-format simple-mpc beacon rainbow-delimiters diminish f async esup centaur-tabs neotree all-the-icons auto-package-update use-package))
+	 '(php-mode company-box frameshot rainbow-mode basic-mode clean-buffers minibuffer-line emacs\.\. org-download scroll-bar org-roam-protocol org-protocol org-tempo faces frame basic-theme fringe vc-hooks files simple scad-preview scad-mode go-mode vterm-toggle vterm auto-complete doom-modeline doom-themes auto-dim-other-buffers outshine imenu-list dashboard major-mode-hydra company which-key general markdown-mode json-mode yaml-mode flyspell-correct-ivy ivy-posframe ivy-rich counsel ivy amx autopair vlf org-bullets writegood-mode emacsql-sqlite3 flycheck-pyflakes flycheck magit clang-format simple-mpc beacon rainbow-delimiters diminish f async esup centaur-tabs neotree all-the-icons auto-package-update use-package))
  '(pdf-view-midnight-colors (cons "#F8F8F0" "#5a5475"))
  '(rustic-ansi-faces
 	 ["#5a5475" "#CC6666" "#C2FFDF" "#FFEA00" "#55b3cc" "#FFB8D1" "#96CBFE" "#F8F8F0"])
@@ -1180,11 +1055,4 @@ This command does not push text to `kill-ring'."
 		(cons 340 "#B8A2CE")
 		(cons 360 "#B8A2CE")))
  '(vc-annotate-very-old-color nil))
-
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Local Variables:
-;; eval: (outline-hide-body)
-;; End:
 (put 'downcase-region 'disabled nil)
-(put 'scroll-left 'disabled nil)
