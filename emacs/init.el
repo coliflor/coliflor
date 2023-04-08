@@ -299,7 +299,7 @@
 ;;; DOOM Modeline
 (use-package doom-modeline
 	:ensure t
-	:init (doom-modeline 1)
+	:init (doom-modeline-mode 1)
 	:config
 	;; How tall the mode-line should be
 	;; (setq doom-modeline-height 10)
