@@ -1,4 +1,4 @@
- ;;; Sets custom user directory
+;;; Sets custom user directory
 (setq user-emacs-directory "~/.config/emacs")
 (add-to-list 'load-path "~/.config/emacs/lisp/")
 
@@ -32,6 +32,7 @@
 
 ;;; Start emacs server if not already running
 (use-package server
+	:ensure t
 	:config
 	(server-start))
 
@@ -59,6 +60,17 @@
 	(setq-default neo-show-hidden-files t)
 	:config
 	(setq all-the-icons-scale-factor 0.7))
+
+;;; Treemacs
+(use-package treemacs
+  :ensure t)
+
+;;; Minimap
+(use-package minimap
+	:disabled t
+	:init (minimap-mode 1)
+	:config
+	(setq minimap-window-location 'right))
 
 ;;; General Tweaks
 (use-package emacs
@@ -120,9 +132,6 @@
 ;; Disable auto-fill-mode in programming mode
 (add-hook 'prog-mode-hook (lambda () (auto-fill-mode -1)))
 
-;; We don't want to type yes and no all the time so, do y and n
-(defalias 'yes-or-no-p 'y-or-n-p)
-
 ;; Don't ring the bell
 (setq ring-bell-function 'ignore)
 
@@ -153,6 +162,8 @@
 
 ;; Visualize spaces, tabs and newline
 ;; (add-hook 'prog-mode-hook 'whitespace-mode)
+
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Globally Change the Default Font
 ;; (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-10" ))
@@ -256,16 +267,11 @@
 	:config
 	(set-fringe-mode 10))
 
-(use-package linum
-	:config
-	(global-linum-mode 1))
-
 ;; close all buffers
 (defun close-all-buffers ()
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DOOM theme
 (progn
 	(use-package doom-themes
@@ -325,6 +331,9 @@
 	;; Including `evil', `overwrite', `god', `ryo' and `xah-fly-keys', etc.
 	(setq doom-modeline-modal-icon nil)
 
+	;; If non-nil, a word count will be added to the selection-info modeline segment.
+	(setq doom-modeline-enable-word-count 1)
+
 	;; Whether display icons in the mode-line.
 	;; While using the server mode in GUI, should set the value explicitly.
 	(setq doom-modeline-icon (display-graphic-p)))
@@ -356,7 +365,6 @@
 ;; disabled
 ;;(setq header-line-format nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Centaur tabs
 (use-package centaur-tabs
 	:defer 0.8
@@ -502,7 +510,6 @@
 
 ;;; Magit
 (use-package magit
-	:disabled t
 	:defer 0.8)
 
 ;;; Configure flycheck
@@ -610,21 +617,21 @@
 	:after org)
 
 (use-package websocket
-    :after org-roam)
+  :after org-roam)
 
 (use-package org-roam-ui
 	:disabled t
 	:init (org-roam-ui-mode 1)
-    :after org
-;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-;;         a hookable mode anymore, you're advised to pick something yourself
-;;         if you don't care about startup time, use
-;;		:hook (after-init . org-roam-ui-mode)
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+  :after org
+	;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+	;;         a hookable mode anymore, you're advised to pick something yourself
+	;;         if you don't care about startup time, use
+	;;		:hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
 
 
 ;;; Vlf - handle open very large files
@@ -697,10 +704,13 @@
 	:after ivy
 	:custom-face
 	;;(ivy-posframe ((t (list :background (face-attribute 'default :background)))))
+	(ivy-posframe-cursor ((t (:background "MediumPurple4"))))
 	(ivy-posframe-border ((t (:background "MediumPurple4"))))
-	;;(ivy-posframe-cursor ((t (:background "MediumPurple4"))))
 	:config
-	;; custom define height of post frame per function
+	;; custom border width
+	(setq ivy-posframe-border-width 10)
+
+ 	;; custom define height of post frame per function
 	(setq ivy-posframe-height-alist '((find-file . 13)
 																		(t         . 13)))
 	;; display at `ivy-posframe-style'
@@ -836,7 +846,7 @@ This command does not push text to `kill-ring'."
 (use-package general
 	:defer 0.8
 	:config
-	(general-unbind
+		(general-unbind
 		"<f10>"
 		"C-t"
 		"C-z"
@@ -844,83 +854,89 @@ This command does not push text to `kill-ring'."
 		"M-<right>"
 		"M-<left>")
 
-	(general-define-key
-	 :keymaps 'vterm-mode-map
-	 "<XF86Paste>" 'vterm-yank)
+		(general-define-key
+		:keymaps 'vterm-mode-map
+		"<XF86Paste>" 'vterm-yank)
 
-	(general-define-key
-	 :keymaps 'ivy-minibuffer-map
-	 "<SunProps>" 'keyboard-escape-quit
-	 "M-<tab>"    'keyboard-escape-quit
-	 "M-x"        'keyboard-escape-quit
-	 "<menu>"     'keyboard-escape-quit
-	 "<cancel>"     'keyboard-escape-quit
-	 )
+		(general-define-key
+		:keymaps 'ivy-minibuffer-map
+		"<SunProps>" 'keyboard-escape-quit
+		"M-<tab>"    'keyboard-escape-quit
+		"M-x"        'keyboard-escape-quit
+		"<menu>"     'keyboard-escape-quit
+		"<cancel>"     'keyboard-escape-quit
+		)
 
-	(general-define-key
-	 :keymaps 'swiper-map
-	 "C-s"    'keyboard-escape-quit
-	 "<find>" 'keyboard-escape-quit
-	 ;;swiper-stay-on-quit
-	 )
+		(general-define-key
+		:keymaps 'swiper-map
+		"C-s"    'keyboard-escape-quit
+		"<find>" 'keyboard-escape-quit
+		;;swiper-stay-on-quit
+		)
 
-	(general-define-key
-	 "<SunProps>"    'counsel-M-x              ;; M-x counsel
-	 "<XF86Open>"    'execute-extended-command ;; M-x menu key
-	 ;"C-s"           'swiper                   ;; search with swiper
-	 "<find>"        'swiper-isearch           ;; "C-r" 'swiper
-	 "C-c C-f"       'clang-format-buffer      ;; clang-format indent C code
-	 "<C-mouse-5>"   'font-small               ;; small buffer resize
-	 "<C-mouse-4>"   'font-big                 ;; big buffer resize
-	 "<S-mouse-5>"   'text-scale-decrease      ;; small buffer resize
-	 "<S-mouse-4>"   'text-scale-increase      ;; big buffer resize
-	 ;; centaur
-	 "<XF86Back>"    'centaur-tabs-backward    ;; cicle buffers backwards
-	 "<XF86Forward>" 'centaur-tabs-forward     ;; cicle buffers forward
-	 ;; cut,copy,paste,delete, rename
-	 "<XF86Cut>"     'clipboard-kill-region    ;; cut text
-	 "<XF86Copy>"    'clipboard-kill-ring-save ;; copy text
-	 "<XF86Paste>"   'clipboard-yank           ;; yank text
-	 "<C-backspace>" 'my-backward-delete-word  ;; custom kill-ring
-	 "<f12>"       'rename-current-buffer-file ;;rename file
-	 ;; spelling
-	 "<f7>"          'flyspell-buffer          ;; flyspell buffer
-	 "<f8>"          'flyspell-correct-previous;; flyspell previus
-	 "<f9>"          'flyspell-correct-next    ;; flyspell next
-	 "<f10>"         'ispell-change-dictionary ;; change dictionary
-	 ;;
-	 "<mouse-3>"     'menu-bar-open            ;; open left mouse menu
-	 "C-x C-z"       'suspend-frame            ;; rebind suspend-frame
-	 "<C-tab>"       'hs-toggle-hiding         ;; toggle codeblock
- 	 ;;windowmove
-	 "M-a"           'windmove-left            ;; window move left
-	 "M-d"           'windmove-right           ;; window move right
-	 "M-w"           'windmove-up              ;; window move up
-	 "M-s"           'windmove-down            ;; window move down
-	 ;; side panels
-	 "M-q"           'imenu-list-smart-toggle  ;; imenu
-	 "M-<ESC>"       'neotree-toggle           ;; neotree
-	 ;; ivy
-	 "C-c C-r"       'ivy-resume
-	 "C-x B"         'ivy-switch-buffer-other-window
-	 "C-x b"         'ivy-switch-buffer
-	 ;; C-z prefix
-	 "C-z z"         'indent-buffer            ;; indent buffer
-	 "C-z l"         'linum-mode               ;; line numbers
-	 ;;"M-<tab>"        'counsel-ibuffer         ;; switch buffer
-	 "M-<tab>"       'counsel-switch-buffer    ;; switch buffer
-	 "C-z C-b"       'counsel-switch-buffer    ;; interactive switch buffer
-	 "C-z i"         'counsel-imenu            ;; imenu
-	 "C-z r"         'counsel-recentf          ;; recent files
-	 ;; :keymaps 'markdown-mode-map
-	 ;; "M-p" nil
-	 ;; "M-n" nil
+		(general-define-key
+		"<SunProps>"    'counsel-M-x              ;; M-x counsel
+		"<XF86Open>"    'execute-extended-command ;; M-x menu key
+		;"C-s"           'swiper                   ;; search with swiper
+		"<find>"        'swiper-isearch           ;; "C-r" 'swiper
+		"C-c C-f"       'clang-format-buffer      ;; clang-format indent C code
+		"<C-mouse-5>"   'font-small               ;; small buffer resize
+		"<C-mouse-4>"   'font-big                 ;; big buffer resize
+		"<S-mouse-5>"   'text-scale-decrease      ;; small buffer resize
+		"<S-mouse-4>"   'text-scale-increase      ;; big buffer resize
+		;; centaur
+		"<XF86Back>"    'centaur-tabs-backward    ;; cicle buffers backwards
+		"<XF86Forward>" 'centaur-tabs-forward     ;; cicle buffers forward
+		;; cut,copy,paste,delete, rename
+		"<XF86Cut>"     'clipboard-kill-region    ;; cut text
+		"<XF86Copy>"    'clipboard-kill-ring-save ;; copy text
+		"<XF86Paste>"   'clipboard-yank           ;; yank text
+		"<C-backspace>" 'my-backward-delete-word  ;; custom kill-ring
+		"<f12>"       'rename-current-buffer-file ;;rename file
+		;; spelling
+		"<f7>"          'flyspell-buffer          ;; flyspell buffer
+		"<f8>"          'flyspell-correct-previous;; flyspell previus
+		"<f9>"          'flyspell-correct-next    ;; flyspell next
+		"<f10>"         'ispell-change-dictionary ;; change dictionary
+		;;
+		"<mouse-9>"     'menu-bar-open            ;; open left mouse menu
+		"C-x C-z"       'suspend-frame            ;; rebind suspend-frame
+		"<C-tab>"       'hs-toggle-hiding         ;; toggle codeblock
+		;;windowmove
+		"M-a"           'windmove-left            ;; window move left
+		"M-d"           'windmove-right           ;; window move right
+		"M-w"           'windmove-up              ;; window move up
+		"M-s"           'windmove-down            ;; window move down
+		;; side panels
+		"M-q"           'imenu-list-smart-toggle  ;; imenu
+		"M-<ESC>"       'neotree-toggle           ;; neotree
+		;; ivy
+		"C-c C-r"       'ivy-resume
+		"C-x B"         'ivy-switch-buffer-other-window
+		"C-x b"         'ivy-switch-buffer
+		;; C-z prefix
+		"C-z z"         'indent-buffer            ;; indent buffer
+		"C-z l"         'display-line-numbers-mode              ;; line numbers
+		;;"M-<tab>"     'counsel-ibuffer          ;; switch buffer
+		"M-<tab>"       'counsel-switch-buffer    ;; switch buffer
+		"C-z C-b"       'counsel-switch-buffer    ;; interactive switch buffer
+		"C-z i"         'counsel-imenu            ;; imenu
+		"C-z r"         'counsel-recentf          ;; recent files
+		;; :keymaps 'markdown-mode-map
+		;; "M-p" nil
+		;; "M-n" nil
 
-	 ;; goto-last
-	 "<XF86Tools>" 'goto-last-point
-	 ;; :keymaps 'org-mode-map
+		;; goto-last
+		"<XF86Tools>" 'goto-last-point
+		;; :keymaps 'org-mode-map
 
-	 ))
+		))
+;;; Alias
+;; We don't want to type yes and no all the time so, do y and n
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(defalias 'select-all 'mark-whole-buffer)
+(defalias 'exit 'kill-emacs)
 
 ;;; goto-last-point
 ;; https://www.emacswiki.org/emacs/goto-last-point.el
@@ -944,8 +960,15 @@ This command does not push text to `kill-ring'."
 
 ;;; Company
 (use-package company
-	:defer 0.8
-	:diminish company-mode)
+  :defer 0.8
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
 
 (use-package company-box
 	:ensure t
@@ -1006,53 +1029,52 @@ This command does not push text to `kill-ring'."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ivy-posframe-border ((t (:background "MediumPurple4")))))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-	 ["#5a5475" "#CC6666" "#C2FFDF" "#FFEA00" "#55b3cc" "#FFB8D1" "#96CBFE" "#F8F8F0"])
- '(custom-safe-themes
-	 '("e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554" "afa47084cb0beb684281f480aa84dab7c9170b084423c7f87ba755b15f6776ef" "d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "7ea491e912d419e6d4be9a339876293fff5c8d13f6e84e9f75388063b5f794d6" "a6473f7abf949f4a6a1a9cc0dd37ea2e35ba3cea65d3442b98d65c5c5c5cb8d7" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "e074be1c799b509f52870ee596a5977b519f6d269455b84ed998666cf6fc802a" "3df5335c36b40e417fec0392532c1b82b79114a05d5ade62cfe3de63a59bc5c6" "08a27c4cde8fcbb2869d71fdc9fa47ab7e4d31c27d40d59bf05729c4640ce834" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" default))
- '(fci-rule-color "#B8A2CE")
- '(jdee-db-active-breakpoint-face-colors (cons "#464258" "#C5A3FF"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#464258" "#C2FFDF"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#464258" "#656565"))
- '(objed-cursor-color "#CC6666")
- '(org-link-frame-setup
-	 '((vm . vm-visit-folder)
-		 (vm-imap . vm-visit-imap-folder)
-		 (gnus . gnus)
-		 (file . find-file)
-		 (wl . wl)))
- '(package-selected-packages
-	 '(php-mode company-box frameshot rainbow-mode basic-mode clean-buffers minibuffer-line emacs\.\. org-download scroll-bar org-roam-protocol org-protocol org-tempo faces frame basic-theme fringe vc-hooks files simple scad-preview scad-mode go-mode vterm-toggle vterm auto-complete doom-modeline doom-themes auto-dim-other-buffers outshine imenu-list dashboard major-mode-hydra company which-key general markdown-mode json-mode yaml-mode flyspell-correct-ivy ivy-posframe ivy-rich counsel ivy amx autopair vlf org-bullets writegood-mode emacsql-sqlite3 flycheck-pyflakes flycheck magit clang-format simple-mpc beacon rainbow-delimiters diminish f async esup centaur-tabs neotree all-the-icons auto-package-update use-package))
- '(pdf-view-midnight-colors (cons "#F8F8F0" "#5a5475"))
- '(rustic-ansi-faces
-	 ["#5a5475" "#CC6666" "#C2FFDF" "#FFEA00" "#55b3cc" "#FFB8D1" "#96CBFE" "#F8F8F0"])
- '(safe-local-variable-values '((eval outline-hide-body)))
- '(vc-annotate-color-map
-	 (list
-		(cons 20 "#C2FFDF")
-		(cons 40 "#d6f894")
-		(cons 60 "#eaf14a")
-		(cons 80 "#FFEA00")
-		(cons 100 "#f6dc00")
-		(cons 120 "#eece00")
-		(cons 140 "#E6C000")
-		(cons 160 "#eebd45")
-		(cons 180 "#f6ba8b")
-		(cons 200 "#FFB8D1")
-		(cons 220 "#ee9cad")
-		(cons 240 "#dd8189")
-		(cons 260 "#CC6666")
-		(cons 280 "#b26565")
-		(cons 300 "#986565")
-		(cons 320 "#7e6565")
-		(cons 340 "#B8A2CE")
-		(cons 360 "#B8A2CE")))
- '(vc-annotate-very-old-color nil))
-(put 'downcase-region 'disabled nil)
+ (custom-set-variables
+	;; custom-set-variables was added by Custom.
+	;; If you edit it by hand, you could mess it up, so be careful.
+	;; Your init file should contain only one such instance.
+	;; If there is more than one, they won't work right.
+	'(ansi-color-names-vector
+		["#5a5475" "#CC6666" "#C2FFDF" "#FFEA00" "#55b3cc" "#FFB8D1" "#96CBFE" "#F8F8F0"])
+	'(custom-safe-themes
+		'("e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554" "afa47084cb0beb684281f480aa84dab7c9170b084423c7f87ba755b15f6776ef" "d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "7ea491e912d419e6d4be9a339876293fff5c8d13f6e84e9f75388063b5f794d6" "a6473f7abf949f4a6a1a9cc0dd37ea2e35ba3cea65d3442b98d65c5c5c5cb8d7" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "e074be1c799b509f52870ee596a5977b519f6d269455b84ed998666cf6fc802a" "3df5335c36b40e417fec0392532c1b82b79114a05d5ade62cfe3de63a59bc5c6" "08a27c4cde8fcbb2869d71fdc9fa47ab7e4d31c27d40d59bf05729c4640ce834" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" default))
+	'(fci-rule-color "#B8A2CE")
+	'(jdee-db-active-breakpoint-face-colors (cons "#464258" "#C5A3FF"))
+	'(jdee-db-requested-breakpoint-face-colors (cons "#464258" "#C2FFDF"))
+	'(jdee-db-spec-breakpoint-face-colors (cons "#464258" "#656565"))
+	'(objed-cursor-color "#CC6666")
+	'(org-link-frame-setup
+		'((vm . vm-visit-folder)
+			(vm-imap . vm-visit-imap-folder)
+			(gnus . gnus)
+			(file . find-file)
+			(wl . wl)))
+	'(package-selected-packages
+		'(php-mode company-box frameshot rainbow-mode basic-mode clean-buffers minibuffer-line emacs.. org-download scroll-bar org-roam-protocol org-protocol org-tempo faces frame basic-theme fringe vc-hooks files simple scad-preview scad-mode go-mode vterm-toggle vterm auto-complete doom-modeline doom-themes auto-dim-other-buffers outshine imenu-list dashboard major-mode-hydra company which-key general markdown-mode json-mode yaml-mode flyspell-correct-ivy ivy-posframe ivy-rich counsel ivy amx autopair vlf org-bullets writegood-mode emacsql-sqlite3 flycheck-pyflakes flycheck magit clang-format simple-mpc beacon rainbow-delimiters diminish f async esup centaur-tabs neotree all-the-icons auto-package-update use-package))
+	'(pdf-view-midnight-colors (cons "#F8F8F0" "#5a5475"))
+	'(rustic-ansi-faces
+		["#5a5475" "#CC6666" "#C2FFDF" "#FFEA00" "#55b3cc" "#FFB8D1" "#96CBFE" "#F8F8F0"])
+	'(safe-local-variable-values '((eval outline-hide-body)))
+	'(vc-annotate-color-map
+		(list
+		 (cons 20 "#C2FFDF")
+		 (cons 40 "#d6f894")
+		 (cons 60 "#eaf14a")
+		 (cons 80 "#FFEA00")
+		 (cons 100 "#f6dc00")
+		 (cons 120 "#eece00")
+		 (cons 140 "#E6C000")
+		 (cons 160 "#eebd45")
+		 (cons 180 "#f6ba8b")
+		 (cons 200 "#FFB8D1")
+		 (cons 220 "#ee9cad")
+		 (cons 240 "#dd8189")
+		 (cons 260 "#CC6666")
+		 (cons 280 "#b26565")
+		 (cons 300 "#986565")
+		 (cons 320 "#7e6565")
+		 (cons 340 "#B8A2CE")
+		 (cons 360 "#B8A2CE")))
+	'(vc-annotate-very-old-color nil))
+ (put 'downcase-region 'disabled nil)
