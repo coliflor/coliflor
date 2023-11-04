@@ -1,4 +1,4 @@
 #!/bin/bash
 
-(cd emacs && ln -s "$(pwd)/init.el" ~/.emacs.d/init.el)
-(cd emacs && ln -s "$(pwd)/early-init.el" ~/.emacs.d/early-init.el)
+(cd emacs && ln -s "$(pwd)/init.el" ~/.config/emacs/init.el)
+(cd emacs && ln -s "$(pwd)/early-init.el" ~/.config/emacs/early-init.el)
