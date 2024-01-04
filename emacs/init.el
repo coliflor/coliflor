@@ -21,7 +21,7 @@
 ;;; Update pacakges
 (use-package auto-package-update
 	:defer 0.8
-	:ensure f
+	:ensure t
 	:config
 	(setq auto-package-update-delete-old-versions t)
 	(setq auto-package-update-interval 4)
@@ -60,10 +60,6 @@
 	(setq-default neo-show-hidden-files t)
 	:config
 	(setq all-the-icons-scale-factor 0.7))
-
-;;; Treemacs
-(use-package treemacs
-  :ensure t)
 
 ;;; Minimap
 (use-package minimap
@@ -503,9 +499,9 @@
 (use-package lua-mode :defer 0.8)
 
 ;;; Java
-(use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
-(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
-(use-package dap-java :ensure nil)
+;; (use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
+;; (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+;; (use-package dap-java :ensure nil)
 
 
 ;;; Magit
@@ -997,7 +993,7 @@ This command does not push text to `kill-ring'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-	 '(vterm outshine imenu-list major-mode-hydra company-quickhelp company-box company which-key goto-last-point general json-mode yaml-mode flyspell-correct-ivy ivy-posframe ivy-rich counsel ivy amx websocket org-ref org-bullets writegood-mode org-download emacsql flycheck-pyflakes flycheck magit lsp-java lua-mode clang-format rainbow-delimiters rainbow-mode diminish async centaur-tabs doom-modeline doom-themes treemacs neotree all-the-icons f)))
+	 '(vterm outshine imenu-list major-mode-hydra company-quickhelp company-box company which-key goto-last-point general json-mode yaml-mode flyspell-correct-ivy ivy-posframe ivy-rich counsel ivy amx websocket org-ref org-bullets writegood-mode org-download emacsql flycheck-pyflakes flycheck magit lua-mode clang-format rainbow-delimiters rainbow-mode diminish async centaur-tabs doom-modeline doom-themes treemacs neotree all-the-icons f)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
