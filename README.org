@@ -2,7 +2,7 @@
 [[header.png]]
 
 * Projects
-
-- [Knauel](https://github.com/coliflor/knauel)
-- [startpage](https://github.com/coliflor/start)
-- [muro](https://github.com/coliflor/muro)
+ A list of my personal projects
++ [[https://github.com/coliflor/knauel][Knauel]]
++ [[https://github.com/coliflor/start][startpage]]
++ [[https://github.com/coliflor/muro][muro]]
