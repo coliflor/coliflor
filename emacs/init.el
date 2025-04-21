@@ -61,13 +61,6 @@
 	:config
 	(setq all-the-icons-scale-factor 0.7))
 
-;;; Minimap
-(use-package minimap
-	:disabled t
-	:init (minimap-mode 1)
-	:config
-	(setq minimap-window-location 'right))
-
 ;;; General Tweaks
 (use-package emacs
 	:config
@@ -476,14 +469,6 @@
 	(setq beacon-size 20)
 	(beacon-mode t))
 
-;;; Simple-mpc A GNU Emacs major mode that acts as a front end to mpc.
-(use-package simple-mpc
-	:disabled t
-	:init
-	(eval-when-compile
-		;; Silence missing function warnings
-		(declare-function simple-mpc "simple-mpc-mode.el")))
-
 ;;; Clang-format
 ;; Create clang-format file using google style
 ;; clang-format -style=google -dump-config > .clang-format
@@ -497,6 +482,17 @@
 
 ;;; Lua
 (use-package lua-mode :defer 0.8)
+
+;;; Rust
+(use-package rust-mode)
+
+(use-package flycheck-rust
+  :init
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+;; PHPs
+(use-package php-mode
+  :ensure t)
 
 ;;; Java
 ;; (use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
@@ -573,15 +569,6 @@
 	:ensure f
 	:defer 0.8
 	:after org)
-
-(use-package writegood-mode
-	:defer 0.8
-	:after org
-	:init
-	(eval-when-compile
-		;; Silence missing function warnings
-		(declare-function writegood-mode "writegood-mode.el"))
-	(add-hook 'org-mode-hook #'writegood-mode))
 
 (use-package org-bullets
 	:defer 0.8
@@ -885,10 +872,16 @@ This command does not push text to `kill-ring'."
 	 ;; "M-n" nil
 
 	 ;; goto-last
-	 "<XF86Tools>" 'goto-last-point
+	 "<XF86Tools>"   'goto-last-point
 	 ;; :keymaps 'org-mode-map
 
+	 ;; org-insert-structure-template)
+	 "C-c C-,"       'org-insert-structure-template
+
+	 ;; magit
+	 "C-x g"         'magit-status
 	 ))
+
 ;;; Alias
 ;; We don't want to type yes and no all the time so, do y and n
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -972,15 +965,6 @@ This command does not push text to `kill-ring'."
 	;; Enables outline-minor-mode for *ALL* programming buffers
 	(add-hook 'prog-mode-hook 'outline-minor-mode))
 
-;;; Auto-dim
-(use-package auto-dim-other-buffers
-	:disabled t
-	:if window-system
-	:init (auto-dim-other-buffers-mode t)
-	:config
-	(setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
-	(setq auto-dim-other-buffers-dim-on-focus-out t))
-
 ;;; Local Variables:
 ;;; outline-regexp: ";;; "
 ;;; eval:(progn (outline-minor-mode 1) (hide-body))
@@ -993,7 +977,16 @@ This command does not push text to `kill-ring'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-	 '(vterm outshine imenu-list major-mode-hydra company-quickhelp company-box company which-key goto-last-point general json-mode yaml-mode flyspell-correct-ivy ivy-posframe ivy-rich counsel ivy amx websocket org-ref org-bullets writegood-mode org-download emacsql flycheck-pyflakes flycheck magit lua-mode clang-format rainbow-delimiters rainbow-mode diminish async centaur-tabs doom-modeline doom-themes treemacs neotree all-the-icons f)))
+	 '(all-the-icons amx async auto-package-update centaur-tabs
+									 clang-format company-box company-quickhelp counsel
+									 diminish doom-modeline doom-themes emacsql
+									 flycheck-pyflakes flycheck-rust
+									 flyspell-correct-ivy general goto-last-point
+									 imenu-list ivy-posframe ivy-rich json-mode lua-mode
+									 magit major-mode-hydra markdown-mode neotree
+									 org-bullets outshine php-mode rainbow-delimiters
+									 rainbow-mode rust-mode which-key writegood-mode
+									 yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
