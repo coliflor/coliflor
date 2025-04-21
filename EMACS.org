@@ -1,0 +1,74 @@
+* Emacs Configuration
+** Packages
+
+This file lists the Emacs packages configured using `use-package`.
+
+- auto-package-update
+- server
+- esup
+- all-the-icons
+- neotree
+- emacs
+- scroll-bar
+- frame
+- paren
+- delsel
+- simple
+- files
+- find-file
+- hl-line
+- vc-hooks
+- fringe
+- doom-themes
+- doom-modeline
+- time
+- centaur-tabs
+- hideshow
+- async
+- s
+- f
+- diminish
+- dash
+- rainbow-mode
+- rainbow-delimiters
+- beacon
+- clang-format :defer 0.8
+- go-mode
+- lua-mode :defer 0.8
+- rust-mode
+- flycheck-rust
+- php-mode
+- magit
+- flycheck
+- flycheck-pyflakes
+- emacsql :defer 0.8
+- org-download
+- org-tempo
+- org-protocol
+- org-bullets
+- org-ref
+- vlf
+- amx
+- ivy
+- counsel
+- ivy-rich
+- ivy-posframe
+- swiper
+- flyspell
+- flyspell-correct-ivy
+- ispell
+- yaml-mode
+- json-mode
+- asm-mode
+- markdown-mode
+- faces
+- general
+- goto-last-point
+- which-key
+- company
+- company-box
+- company-quickhelp
+- auto-complete
+- major-mode-hydra
+- pretty-hydra
+- imenu-list
