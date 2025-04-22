@@ -807,92 +807,102 @@ This command does not push text to `kill-ring'."
 		"M-<right>"
 		"M-<left>")
 
-	(general-define-key
-	 :keymaps 'vterm-mode-map
-	 "<XF86Paste>" 'vterm-yank)
+	(if (eq system-type 'gnu/linux)
+			(general-define-key
+			 :keymaps 'vterm-mode-map
+			 "<XF86Paste>" 'vterm-yank)
 
-	(general-define-key
-	 :keymaps 'ivy-minibuffer-map
-	 "<SunProps>" 'keyboard-escape-quit
-	 "M-<tab>"    'keyboard-escape-quit
-	 "M-x"        'keyboard-escape-quit
-	 "<menu>"     'keyboard-escape-quit
-	 "<cancel>"     'keyboard-escape-quit
-	 )
+		(general-define-key
+		 :keymaps 'ivy-minibuffer-map
+		 "<SunProps>" 'keyboard-escape-quit
+		 "M-<tab>"    'keyboard-escape-quit
+		 "M-x"        'keyboard-escape-quit
+		 "<menu>"     'keyboard-escape-quit
+		 "<cancel>"   'keyboard-escape-quit
+		 )
 
-	(general-define-key
-	 :keymaps 'swiper-map
-	 "C-s"    'keyboard-escape-quit
-	 "<find>" 'keyboard-escape-quit
-	 ;;swiper-stay-on-quit
-	 )
+		(general-define-key
+		 :keymaps 'swiper-map
+		 "C-s"    'keyboard-escape-quit
+		 "<find>" 'keyboard-escape-quit
+		 ;;swiper-stay-on-quit
+		 )
 
-	(general-define-key
-	 "<SunProps>"    'counsel-M-x              ;; M-x counsel
-	 "<XF86Open>"    'execute-extended-command ;; M-x menu key
-	 ;;"C-s"           'swiper                   ;; search with swiper
-	 "<find>"        'swiper-isearch           ;; "C-r" 'swiper
-	 "C-c C-f"       'clang-format-buffer      ;; clang-format indent C code
-	 "<C-mouse-5>"   'font-small               ;; small buffer resize
-	 "<C-mouse-4>"   'font-big                 ;; big buffer resize
-	 "<S-mouse-5>"   'text-scale-decrease      ;; small buffer resize
-	 "<S-mouse-4>"   'text-scale-increase      ;; big buffer resize
-	 ;; centaur
-	 "<XF86Back>"    'centaur-tabs-backward    ;; cicle buffers backwards
-	 "<XF86Forward>" 'centaur-tabs-forward     ;; cicle buffers forward
-	 ;; cut,copy,paste,delete, rename
-	 "<XF86Cut>"     'clipboard-kill-region    ;; cut text
-	 "<XF86Copy>"    'clipboard-kill-ring-save ;; copy text
-	 "<XF86Paste>"   'clipboard-yank           ;; yank text
-	 "<C-backspace>" 'my-backward-delete-word  ;; custom kill-ring
-	 "<f12>"       'rename-current-buffer-file ;;rename file
-	 ;; spelling
-	 "<f7>"          'flyspell-buffer          ;; flyspell buffer
-	 "<f8>"          'flyspell-correct-previous;; flyspell previus
-	 "<f9>"          'flyspell-correct-next    ;; flyspell next
-	 "<f10>"         'ispell-change-dictionary ;; change dictionary
-	 ;;
-	 "<mouse-9>"     'menu-bar-open            ;; open left mouse menu
-	 "C-x C-z"       'suspend-frame            ;; rebind suspend-frame
-	 "<C-tab>"       'hs-toggle-hiding         ;; toggle codeblock
-	 ;;windowmove
-	 "M-a"           'windmove-left            ;; window move left
-	 "M-d"           'windmove-right           ;; window move right
-	 "M-w"           'windmove-up              ;; window move up
-	 "M-s"           'windmove-down            ;; window move down
-	 ;; side panels
-	 "M-q"           'imenu-list-smart-toggle  ;; imenu
-	 "M-<ESC>"       'neotree-toggle           ;; neotree
-	 ;; ivy
-	 "C-c C-r"       'ivy-resume
-	 "C-x B"         'ivy-switch-buffer-other-window
-	 "C-x b"         'ivy-switch-buffer
-	 ;; C-z prefix
-	 "C-z z"         'indent-buffer            ;; indent buffer
-	 "C-z l"         'display-line-numbers-mode              ;; line numbers
-	 ;;"M-<tab>"     'counsel-ibuffer          ;; switch buffer
-	 "M-<tab>"       'counsel-switch-buffer    ;; switch buffer
-	 "C-z C-b"       'counsel-switch-buffer    ;; interactive switch buffer
-	 "C-z i"         'counsel-imenu            ;; imenu
-	 "C-z r"         'counsel-recentf          ;; recent files
-	 ;; :keymaps 'markdown-mode-map
-	 ;; "M-p" nil
-	 ;; "M-n" nil
+		(general-define-key
+		 "<Sunprops>"    'counsel-M-x              ;; M-x counsel
+		 "<XF86Open>"    'execute-extended-command ;; M-x menu key
+		 ;;"C-s"           'swiper                   ;; search with swiper
+		 "<find>"        'swiper-isearch           ;; "C-r" 'swiper
+		 "C-c C-f"       'clang-format-buffer      ;; clang-format indent C code
+		 "<C-mouse-5>"   'font-small               ;; small buffer resize
+		 "<C-mouse-4>"   'font-big                 ;; big buffer resize
+		 "<S-mouse-5>"   'text-scale-decrease      ;; small buffer resize
+		 "<S-mouse-4>"   'text-scale-increase      ;; big buffer resize
+		 ;; centaur
+		 "<XF86Back>"    'centaur-tabs-backward    ;; cicle buffers backwards
+		 "<XF86Forward>" 'centaur-tabs-forward     ;; cicle buffers forward
+		 ;; cut,copy,paste,delete, rename
+		 "<XF86Cut>"     'clipboard-kill-region    ;; cut text
+		 "<XF86Copy>"    'clipboard-kill-ring-save ;; copy text
+		 "<XF86Paste>"   'clipboard-yank           ;; yank text
+		 "<C-backspace>" 'my-backward-delete-word  ;; custom kill-ring
+		 "<f12>"       'rename-current-buffer-file ;;rename file
+		 ;; spelling
+		 "<f7>"          'flyspell-buffer          ;; flyspell buffer
+		 "<f8>"          'flyspell-correct-previous;; flyspell previus
+		 "<f9>"          'flyspell-correct-next    ;; flyspell next
+		 "<f10>"         'ispell-change-dictionary ;; change dictionary
+		 ;;
+		 "<mouse-9>"     'menu-bar-open            ;; open left mouse menu
+		 "C-x C-z"       'suspend-frame            ;; rebind suspend-frame
+		 "<C-tab>"       'hs-toggle-hiding         ;; toggle codeblock
+		 ;;windowmove
+		 "M-a"           'windmove-left            ;; window move left
+		 "M-d"           'windmove-right           ;; window move right
+		 "M-w"           'windmove-up              ;; window move up
+		 "M-s"           'windmove-down            ;; window move down
+		 ;; side panels
+		 "M-q"           'imenu-list-smart-toggle  ;; imenu
+		 "M-<ESC>"       'neotree-toggle           ;; neotree
+		 ;; ivy
+		 "C-c C-r"       'ivy-resume
+		 "C-x B"         'ivy-switch-buffer-other-window
+		 "C-x b"         'ivy-switch-buffer
+		 ;; C-z prefix
+		 "C-z z"         'indent-buffer            ;; indent buffer
+		 "C-z l"         'display-line-numbers-mode              ;; line numbers
+		 ;;"M-<tab>"     'counsel-ibuffer          ;; switch buffer
+		 "M-<tab>"       'counsel-switch-buffer    ;; switch buffer
+		 "C-z C-b"       'counsel-switch-buffer    ;; interactive switch buffer
+		 "C-z i"         'counsel-imenu            ;; imenu
+		 "C-z r"         'counsel-recentf          ;; recent files
+		 ;; :keymaps 'markdown-mode-map
+		 ;; "M-p" nil
+		 ;; "M-n" nil
 
-	 ;; goto-last
-	 "<XF86Tools>"   'goto-last-point
-	 ;; :keymaps 'org-mode-map
+		 ;; goto-last
+		 "<XF86Tools>"   'goto-last-point
+		 ;; :keymaps 'org-mode-map
 
-	 ;; org-insert-structure-template)
-	 "C-c C-,"       'org-insert-structure-template
+		 ;; org-insert-structure-template)
+		 "C-c C-,"       'org-insert-structure-template
 
-	 ;; magit
-	 "C-x g"         'magit-status
-	 )
+		 ;; magit
+		 "C-x g"         'magit-status
+		 ))
 
-	(general-define-key
-   :keycodes [[82]]        'execute-extended-command     ;; M-x
-   ))
+	(if (eq system-type 'android)
+			(general-define-key
+			 :keymaps 'ivy-minibuffer-map
+			 "M-<tab>"    'keyboard-escape-quit
+			 "M-x"        'keyboard-escape-quit
+			 "<menu>"     'keyboard-escape-quit
+			 "<cancel>"   'keyboard-escape-quit
+			 )
+
+		(general-define-key
+		 "<menu>"   'execute-extended-command     ;; M-x
+		 )))
 
 ;;; Alias
 ;; We don't want to type yes and no all the time so, do y and n
@@ -923,15 +933,15 @@ This command does not push text to `kill-ring'."
 
 ;;; Company
 (use-package company
-  :defer 0.8
-  :diminish
-  :custom
-  (company-begin-commands '(self-insert-command))
-  (company-idle-delay .1)
-  (company-minimum-prefix-length 2)
-  (company-show-numbers t)
-  (company-tooltip-align-annotations 't)
-  (global-company-mode t))
+	:defer 0.8
+	:diminish
+	:custom
+	(company-begin-commands '(self-insert-command))
+	(company-idle-delay .1)
+	(company-minimum-prefix-length 2)
+	(company-show-numbers t)
+	(company-tooltip-align-annotations 't)
+	(global-company-mode t))
 
 (use-package company-box
 	:ensure t
