@@ -157,10 +157,13 @@
 ;; Globally Change the Default Font
 ;; (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-10" ))
 ;; (set-face-attribute 'default t :font "Droid Sans Mono-10" )
-(add-to-list 'default-frame-alist '(font . "DinaRemasterII 18" ))
-(set-face-attribute 'default t :font "DinaRemasterII 18" )
-(set-frame-font "DinaRemasterII 18" nil t)
-
+;; (add-to-list 'default-frame-alist '(font . "DinaRemasterII 18" ))
+;; (set-face-attribute 'default t :font "DinaRemasterII 18" )
+;; (set-frame-font "DinaRemasterII 18" nil t)
+(unless (equal system-type 'android)
+  (add-to-list 'default-frame-alist '(font . "DinaRemasterII 18"))
+  (set-face-attribute 'default t :font "DinaRemasterII 18")
+  (set-frame-font "DinaRemasterII 18" nil t))
 (defvar my-font-size 180)
 
 (set-face-attribute ;; Make mode bar small
@@ -976,17 +979,7 @@ This command does not push text to `kill-ring'."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-	 '(all-the-icons amx async auto-package-update centaur-tabs
-									 clang-format company-box company-quickhelp counsel
-									 diminish doom-modeline doom-themes emacsql
-									 flycheck-pyflakes flycheck-rust
-									 flyspell-correct-ivy general goto-last-point
-									 imenu-list ivy-posframe ivy-rich json-mode lua-mode
-									 magit major-mode-hydra markdown-mode neotree
-									 org-bullets outshine php-mode rainbow-delimiters
-									 rainbow-mode rust-mode which-key writegood-mode
-									 yaml-mode)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
