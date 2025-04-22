@@ -505,9 +505,10 @@
 
 
 ;;; Magit
-(use-package magit
-	:ensure t
-	:defer 0.8)
+(unless (equal system-type 'android)
+	(use-package magit
+		:ensure t
+		:defer 0.8))
 
 ;;; Configure flycheck
 ;; Note: For C++ we use flycheck with LSP mode
@@ -693,33 +694,34 @@
 	:after ivy)
 
 ;;; Flyspell Mode for Spelling Corrections
-(use-package flyspell
-	:defer 0.8
-	:diminish flyspell-mode
-	:hook ((text-mode . flyspell-mode)
-				 (prog-mode . flyspell-prog-mode)
-				 (org-mode . flyspell-mode))
-	:init
-	(eval-when-compile
-		;; Silence missing function warnings
-		(declare-function flyspell-goto-next-error "flyspell.el")
-		(declare-function flyspell-mode "flyspell.el")
-		(declare-function flyspell-prog-mode "flyspell.el"))
-	(setq flyspell-issue-welcome-flag nil)
-	:config
-	(defun flyspell-check-next-highlighted-word ()
-		"Custom function to spell check next highlighted word."
-		(interactive)
-		(flyspell-goto-next-error)
-		(ispell-word)))
+(unless (equal system-type 'android)
+	(use-package flyspell
+		:defer 0.8
+		:diminish flyspell-mode
+		:hook ((text-mode . flyspell-mode)
+					 (prog-mode . flyspell-prog-mode)
+					 (org-mode . flyspell-mode))
+		:init
+		(eval-when-compile
+			;; Silence missing function warnings
+			(declare-function flyspell-goto-next-error "flyspell.el")
+			(declare-function flyspell-mode "flyspell.el")
+			(declare-function flyspell-prog-mode "flyspell.el"))
+		(setq flyspell-issue-welcome-flag nil)
+		:config
+		(defun flyspell-check-next-highlighted-word ()
+			"Custom function to spell check next highlighted word."
+			(interactive)
+			(flyspell-goto-next-error)
+			(ispell-word)))
 
-(use-package flyspell-correct-ivy
-	:after flyspell)
+	(use-package flyspell-correct-ivy
+		:after flyspell)
 
-(use-package ispell
-	:after flyspell
-	:config
-	(setq-default ispell-program-name "aspell"))
+	(use-package ispell
+		:after flyspell
+		:config
+		(setq-default ispell-program-name "aspell")))
 
 ;;; Yaml/json/markdown/asm  mode
 (use-package yaml-mode
