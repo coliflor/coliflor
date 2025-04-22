@@ -830,7 +830,7 @@ This command does not push text to `kill-ring'."
 	(general-define-key
 	 "<SunProps>"    'counsel-M-x              ;; M-x counsel
 	 "<XF86Open>"    'execute-extended-command ;; M-x menu key
-																				;"C-s"           'swiper                   ;; search with swiper
+	 ;;"C-s"           'swiper                   ;; search with swiper
 	 "<find>"        'swiper-isearch           ;; "C-r" 'swiper
 	 "C-c C-f"       'clang-format-buffer      ;; clang-format indent C code
 	 "<C-mouse-5>"   'font-small               ;; small buffer resize
@@ -888,7 +888,11 @@ This command does not push text to `kill-ring'."
 
 	 ;; magit
 	 "C-x g"         'magit-status
-	 ))
+	 )
+
+	(general-define-key
+   :keycodes [[82]]        'execute-extended-command     ;; M-x
+   ))
 
 ;;; Alias
 ;; We don't want to type yes and no all the time so, do y and n
