@@ -54,28 +54,26 @@
 
 ;;; NeoTree
 ;; M-x all-the-icons-install-fonts and fc-cache -f -v
-(use-package
-	:unless (equal system-type 'android)
-	all-the-icons)
-(use-package neotree
-	:unless (equal system-type 'android)
-	:init
-	(setq-default neo-show-hidden-files t)
-	:config
-	(setq all-the-icons-scale-factor 0.7))
+(unless (equal system-type 'android)
+	(use-package all-the-icons)
+	(use-package neotree
+		:init
+		(setq-default neo-show-hidden-files t)
+		:config
+		(setq all-the-icons-scale-factor 0.7)))
 
 ;;; General Tweaks
-(use-package emacs
-	:unless (equal system-type 'android)
-	:config
-	(setq initial-scratch-message "")    ;; Makes *scratch* empty.
-	(setq inhibit-splash-screen t)       ;; I don't care to see the splash screen
-	(setq inhibit-startup-buffer-menu t) ;; Don't show *Buffer list*
-	(setq use-dialog-box nil)            ;; To disable dialog windows
-	(tool-bar-mode -1)                   ;; Disabling the tool bar
-	(menu-bar-mode -1)                   ;; Disabling the menu bar
-	(setq create-lockfiles nil)          ;; Prevent from writing temporary .# files
-	)
+(unless (equal system-type 'android)
+	(use-package emacs
+		:config
+		(setq initial-scratch-message "")    ;; Makes *scratch* empty.
+		(setq inhibit-splash-screen t)       ;; I don't care to see the splash screen
+		(setq inhibit-startup-buffer-menu t) ;; Don't show *Buffer list*
+		(setq use-dialog-box nil)            ;; To disable dialog windows
+		(tool-bar-mode -1)                   ;; Disabling the tool bar
+		(menu-bar-mode -1)                   ;; Disabling the menu bar
+		(setq create-lockfiles nil)          ;; Prevent from writing temporary .# files
+		))
 
 (use-package scroll-bar
 	:ensure f
@@ -271,7 +269,6 @@
 ;;; DOOM theme
 (progn
 	(use-package doom-themes
-		:unless (equal system-type 'android)
 		:config
 
 		;; Global settings (defaults)
@@ -300,7 +297,6 @@
 
 ;;; DOOM Modeline
 (use-package doom-modeline
-	:unless (equal system-type 'android)
 	:ensure t
 	:init (doom-modeline-mode 1)
 	:config
