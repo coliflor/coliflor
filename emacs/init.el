@@ -54,8 +54,11 @@
 
 ;;; NeoTree
 ;; M-x all-the-icons-install-fonts and fc-cache -f -v
-(use-package all-the-icons)
+(use-package
+	:unless (equal system-type 'android)
+	all-the-icons)
 (use-package neotree
+	:unless (equal system-type 'android)
 	:init
 	(setq-default neo-show-hidden-files t)
 	:config
@@ -63,6 +66,7 @@
 
 ;;; General Tweaks
 (use-package emacs
+	:unless (equal system-type 'android)
 	:config
 	(setq initial-scratch-message "")    ;; Makes *scratch* empty.
 	(setq inhibit-splash-screen t)       ;; I don't care to see the splash screen
@@ -161,7 +165,7 @@
 ;; (set-face-attribute 'default t :font "DinaRemasterII 18" )
 ;; (set-frame-font "DinaRemasterII 18" nil t)
 (unless (equal system-type 'android)
-  (add-to-list 'default-frame-alist '(font . "DinaRemasterII 18"))
+  (add-to-list 'default-frame-alist '(font:: . "DinaRemasterII 18"))
   (set-face-attribute 'default t :font "DinaRemasterII 18")
   (set-frame-font "DinaRemasterII 18" nil t))
 (defvar my-font-size 180)
@@ -267,7 +271,7 @@
 ;;; DOOM theme
 (progn
 	(use-package doom-themes
-		:if window-system
+		:unless (equal system-type 'android)
 		:config
 
 		;; Global settings (defaults)
@@ -296,6 +300,7 @@
 
 ;;; DOOM Modeline
 (use-package doom-modeline
+	:unless (equal system-type 'android)
 	:ensure t
 	:init (doom-modeline-mode 1)
 	:config
