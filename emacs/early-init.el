@@ -87,3 +87,7 @@
 (if (not (file-directory-p "~/.config/emacs/plugins/"))
 		(make-directory "~/.config/emacs/plugins/"))
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/plugins"))
+
+(setenv "PATH" (format "%s:%s" "/data/data/com.termux/files/usr/bin"
+		       (getenv "PATH")))
+(push "/data/data/com.termux/files/usr/bin" exec-path)
