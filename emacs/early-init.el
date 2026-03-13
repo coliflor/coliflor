@@ -15,9 +15,10 @@
 ;;(set-specifier vertical-scrollbar-visible-p nil)
 
 ;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
-(push '(menu-bar-lines . 0) default-frame-alist)
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
+(unless (equal system-type 'android)
+	(push '(menu-bar-lines . 0) default-frame-alist)
+	(push '(tool-bar-lines . 0) default-frame-alist)
+	(push '(vertical-scroll-bars) default-frame-alist))
 
 ;; It disables tooltips via GTK+
 ;; NOTE: currently not using GTK+
@@ -87,7 +88,3 @@
 (if (not (file-directory-p "~/.config/emacs/plugins/"))
 		(make-directory "~/.config/emacs/plugins/"))
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/plugins"))
-
-(setenv "PATH" (format "%s:%s" "/data/data/com.termux/files/usr/bin"
-		       (getenv "PATH")))
-(push "/data/data/com.termux/files/usr/bin" exec-path)

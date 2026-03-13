@@ -54,39 +54,42 @@
 
 ;;; NeoTree
 ;; M-x all-the-icons-install-fonts and fc-cache -f -v
-(unless (equal system-type 'android)
-	(use-package all-the-icons)
-	(use-package neotree
-		:init
-		(setq-default neo-show-hidden-files t)
-		:config
-		(setq all-the-icons-scale-factor 0.7)))
+(use-package all-the-icons)
+(use-package neotree
+	:init
+	(setq-default neo-show-hidden-files t)
+	:config
+	(setq all-the-icons-scale-factor 0.7))
 
 ;;; General Tweaks
-(unless (equal system-type 'android)
-	(use-package emacs
-		:config
-		(setq initial-scratch-message "")    ;; Makes *scratch* empty.
-		(setq inhibit-splash-screen t)       ;; I don't care to see the splash screen
-		(setq inhibit-startup-buffer-menu t) ;; Don't show *Buffer list*
-		(setq use-dialog-box nil)            ;; To disable dialog windows
-		(tool-bar-mode -1)                   ;; Disabling the tool bar
-		(menu-bar-mode -1)                   ;; Disabling the menu bar
-		(setq create-lockfiles nil)          ;; Prevent from writing temporary .# files
-		))
+(use-package emacs
+	:config
+	(setq initial-scratch-message "")    ;; Makes *scratch* empty.
+	(setq inhibit-splash-screen t)       ;; I don't care to see the splash screen
+	(setq inhibit-startup-buffer-menu t) ;; Don't show *Buffer list*
+	(setq use-dialog-box nil)            ;; To disable dialog windows
+	(tool-bar-mode -1)                   ;; Disabling the tool bar
+	(menu-bar-mode -1)                   ;; Disabling the menu bar
+	(setq create-lockfiles nil)          ;; Prevent from writing temporary .# files
+
+	(when (eq system-type 'darwin)
+		(setq mac-command-modifier 'meta)  ;; Command is Meta
+		(setq mac-option-modifier 'none)   ;; Option is left for special characters (like symbols)
+		;; (setq mac-right-option-modifier 'alt) ;; Optional: use right option as Alt
+		)
+	)
+
+;;; exec-path-from-shell
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns))
+  :config
+  (exec-path-from-shell-initialize))
 
 (use-package scroll-bar
 	:ensure f
 	:config
 	(scroll-bar-mode 1))
-
-(use-package frame
-	:ensure f
-	:defer 0.8
-	:config
-	;; set transparency (picom)
-	(set-frame-parameter (selected-frame) 'alpha '(99 99))
-	(add-to-list 'default-frame-alist '(alpha 99 99)))
 
 ;; Rename Current Buffer File
 ;; https://stackoverflow.com/questions/384284/how-do-i-rename-an-open-file-in-emacs
@@ -157,15 +160,6 @@
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Globally Change the Default Font
-;; (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-10" ))
-;; (set-face-attribute 'default t :font "Droid Sans Mono-10" )
-;; (add-to-list 'default-frame-alist '(font . "DinaRemasterII 18" ))
-;; (set-face-attribute 'default t :font "DinaRemasterII 18" )
-;; (set-frame-font "DinaRemasterII 18" nil t)
-(unless (equal system-type 'android)
-  (add-to-list 'default-frame-alist '(font:: . "DinaRemasterII 18"))
-  (set-face-attribute 'default t :font "DinaRemasterII 18")
-  (set-frame-font "DinaRemasterII 18" nil t))
 (defvar my-font-size 180)
 
 (set-face-attribute ;; Make mode bar small
@@ -327,6 +321,8 @@
 	;; If non-nil, a word count will be added to the selection-info modeline segment.
 	(setq doom-modeline-enable-word-count 1)
 
+	(setq doom-modeline-icon t)
+
 	;; Whether display icons in the mode-line.
 	;; While using the server mode in GUI, should set the value explicitly.
 	(setq doom-modeline-icon (display-graphic-p)))
@@ -473,11 +469,22 @@
 	(setq beacon-size 20)
 	(beacon-mode t))
 
+(use-package eglot
+	:config
+	(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+	(add-hook 'c-mode-hook 'eglot-ensure))
+
 ;;; Clang-format
 ;; Create clang-format file using google style
 ;; clang-format -style=google -dump-config > .clang-format
 ;; clang-format -style=llvm -dump-config > .clang-format
 (use-package clang-format :defer 0.8)
+
+;;; Swift editing support
+(use-package swift-mode
+  :ensure t
+  :mode "\\.swift\\'"
+  :interpreter "swift")
 
 ;;; Golang
 (use-package go-mode
@@ -503,12 +510,17 @@
 ;; (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
 ;; (use-package dap-java :ensure nil)
 
+;;; Vundo
+(use-package vundo
+	:ensure t
+  :config
+  (setq vundo-compact-display t)
+  (setq vundo-glyph-alist vundo-unicode-symbols))
 
 ;;; Magit
-(unless (equal system-type 'android)
-	(use-package magit
-		:ensure t
-		:defer 0.8))
+(use-package magit
+	:ensure t
+	:defer 0.8)
 
 ;;; Configure flycheck
 ;; Note: For C++ we use flycheck with LSP mode
@@ -694,34 +706,33 @@
 	:after ivy)
 
 ;;; Flyspell Mode for Spelling Corrections
-(unless (equal system-type 'android)
-	(use-package flyspell
-		:defer 0.8
-		:diminish flyspell-mode
-		:hook ((text-mode . flyspell-mode)
-					 (prog-mode . flyspell-prog-mode)
-					 (org-mode . flyspell-mode))
-		:init
-		(eval-when-compile
-			;; Silence missing function warnings
-			(declare-function flyspell-goto-next-error "flyspell.el")
-			(declare-function flyspell-mode "flyspell.el")
-			(declare-function flyspell-prog-mode "flyspell.el"))
-		(setq flyspell-issue-welcome-flag nil)
-		:config
-		(defun flyspell-check-next-highlighted-word ()
-			"Custom function to spell check next highlighted word."
-			(interactive)
-			(flyspell-goto-next-error)
-			(ispell-word)))
+(use-package flyspell
+	:defer 0.8
+	:diminish flyspell-mode
+	:hook ((text-mode . flyspell-mode)
+				 (prog-mode . flyspell-prog-mode)
+				 (org-mode . flyspell-mode))
+	:init
+	(eval-when-compile
+		;; Silence missing function warnings
+		(declare-function flyspell-goto-next-error "flyspell.el")
+		(declare-function flyspell-mode "flyspell.el")
+		(declare-function flyspell-prog-mode "flyspell.el"))
+	(setq flyspell-issue-welcome-flag nil)
+	:config
+	(defun flyspell-check-next-highlighted-word ()
+		"Custom function to spell check next highlighted word."
+		(interactive)
+		(flyspell-goto-next-error)
+		(ispell-word)))
 
-	(use-package flyspell-correct-ivy
-		:after flyspell)
+(use-package flyspell-correct-ivy
+	:after flyspell)
 
-	(use-package ispell
-		:after flyspell
-		:config
-		(setq-default ispell-program-name "aspell")))
+(use-package ispell
+	:after flyspell
+	:config
+	(setq-default ispell-program-name "aspell"))
 
 ;;; Yaml/json/markdown/asm  mode
 (use-package yaml-mode
@@ -798,108 +809,166 @@ This command does not push text to `kill-ring'."
   :defer 0.8
   :config
   (general-unbind
-		"<f10>"
-		"C-t"
-		"C-z"
-		;;"M-w"
-		"M-<right>"
-		"M-<left>")
+    "C-t"
+    "C-z"
+    ;;"M-w"
+    "M-<right>"
+    "M-<left>")
+  (cond
 
-	(if (eq system-type 'gnu/linux)
-			(progn
-				(general-define-key
-				 :keymaps 'vterm-mode-map
-				 "<XF86Paste>" 'vterm-yank)
+   ;; ── GNU / Linux ────────────────────────────────────────────────────────────
+   ((eq system-type 'gnu/linux)
+    (general-define-key
+     :keymaps 'vterm-mode-map
+     "<XF86Paste>" 'vterm-yank)
+    (general-define-key
+     :keymaps 'ivy-minibuffer-map
+     "<SunProps>" 'keyboard-escape-quit
+     "M-<tab>"    'keyboard-escape-quit
+     "M-x"        'keyboard-escape-quit
+     "<menu>"     'keyboard-escape-quit
+     "<cancel>"   'keyboard-escape-quit)
+    (general-define-key
+     :keymaps 'swiper-map
+     "C-s"    'keyboard-escape-quit
+     "<find>" 'keyboard-escape-quit)
+    (general-define-key
+     "<SunProps>"    'counsel-M-x
+     "<XF86Open>"    'execute-extended-command
+     "<find>"        'swiper-isearch
+     "C-c C-f"       'clang-format-buffer
+     "<C-mouse-5>"   'font-small
+     "<C-mouse-4>"   'font-big
+     "<S-mouse-5>"   'text-scale-decrease
+     "<S-mouse-4>"   'text-scale-increase
+     "<XF86Back>"    'centaur-tabs-backward
+     "<XF86Forward>" 'centaur-tabs-forward
+     "<XF86Cut>"     'clipboard-kill-region
+     "<XF86Copy>"    'clipboard-kill-ring-save
+     "<XF86Paste>"   'clipboard-yank
+     "<C-backspace>" 'my-backward-delete-word
+     "<mouse-9>"     'menu-bar-open
+     "C-x C-z"       'suspend-frame
+     "<C-tab>"       'hs-toggle-hiding
+     "M-a"           'windmove-left
+     "M-d"           'windmove-right
+     "M-w"           'windmove-up
+     "M-s"           'windmove-down
+     "M-q"           'imenu-list-smart-toggle
+     "M-<ESC>"       'neotree-toggle
+     "C-c C-r"       'ivy-resume
+     "C-x B"         'ivy-switch-buffer-other-window
+     "C-x b"         'ivy-switch-buffer
+     "C-z z"         'indent-buffer
+     "C-z l"         'display-line-numbers-mode
+     "M-<tab>"       'counsel-switch-buffer
+     "C-z C-b"       'counsel-switch-buffer
+     "C-z i"         'counsel-imenu
+     "C-z r"         'counsel-recentf
+     "<XF86Tools>"   'goto-last-point
+     "C-c C-,"       'org-insert-structure-template
+     "C-x g"         'magit-status))
 
-				(general-define-key
-				 :keymaps 'ivy-minibuffer-map
-				 "<SunProps>" 'keyboard-escape-quit
-				 "M-<tab>"    'keyboard-escape-quit
-				 "M-x"        'keyboard-escape-quit
-				 "<menu>"     'keyboard-escape-quit
-				 "<cancel>"   'keyboard-escape-quit)
+   ;; ── macOS / Darwin ─────────────────────────────────────────────────────────
+   ;;
+   ;;  MacBook F-row (default, without "Use F1/F2 as standard keys"):
+   ;;
+   ;;  F1  Brightness ↓      F7  ⏮  Prev track   → flyspell-buffer
+   ;;  F2  Brightness ↑      F8  ⏯  Play/Pause   → flyspell-correct-previous
+   ;;  F3  Mission Control   F9  ⏭  Next track   → flyspell-correct-next
+   ;;  F4  Launchpad         F10 🔇  Mute         → ispell-change-dictionary
+   ;;  F5  Kbd bright ↓      F11 🔉  Vol ↓        (left free / system)
+   ;;  F6  Kbd bright ↑      F12 🔊  Vol ↑        (left free / system)
+   ;;
+   ;;
+   ((eq system-type 'darwin)
+    (general-define-key
+     :keymaps 'vterm-mode-map
+     "s-v" 'vterm-yank)                         ;; ⌘V paste in vterm
+    (general-define-key
+     :keymaps 'ivy-minibuffer-map
+     "M-<tab>"    'keyboard-escape-quit
+     "M-x"        'keyboard-escape-quit
+     "s-<escape>" 'keyboard-escape-quit)        ;; ⌘Esc quit ivy
+    (general-define-key
+     :keymaps 'swiper-map
+     "C-s" 'keyboard-escape-quit
+     "s-f" 'keyboard-escape-quit)              ;; ⌘F quit swiper
+    (general-define-key
+     ;; ── Launcher / search ───────────────────────────────────────────────────
+     "s-<space>"              'counsel-M-x              ;; ⌘Space  → M-x
+     "s-<return>"             'execute-extended-command ;; ⌘Return → extended cmd
+     "s-f"                    'swiper-isearch           ;; ⌘F      → swiper
+     "C-c C-f"                'clang-format-buffer      ;; clang-format
 
-				(general-define-key
-				 :keymaps 'swiper-map
-				 "C-s"    'keyboard-escape-quit
-				 "<find>" 'keyboard-escape-quit
-				 ;;swiper-stay-on-quit
-				 )
+     ;; ── Font / text scale ───────────────────────────────────────────────────
+     "<C-mouse-5>"            'font-small
+     "<C-mouse-4>"            'font-big
+     "<S-mouse-5>"            'text-scale-decrease
+     "<S-mouse-4>"            'text-scale-increase
+     "s-="                    'text-scale-increase      ;; ⌘=  zoom in
+     "s--"                    'text-scale-decrease      ;; ⌘-  zoom out
+     "s-0"                    'text-scale-adjust        ;; ⌘0  reset zoom
 
-				(general-define-key
-				 "<SunProps>"    'counsel-M-x             ;; M-x counsel
-				 "<XF86Open>"    'execute-extended-command ;; M-x menu key
-				 ;;"C-s"          'swiper                    ;; search with swiper
-				 "<find>"        'swiper-isearch            ;; "C-r" 'swiper
-				 "C-c C-f"       'clang-format-buffer       ;; clang-format indent C code
-				 "<C-mouse-5>"   'font-small                ;; small buffer resize
-				 "<C-mouse-4>"   'font-big                  ;; big buffer resize
-				 "<S-mouse-5>"   'text-scale-decrease       ;; small buffer resize
-				 "<S-mouse-4>"   'text-scale-increase       ;; big buffer resize
-				 ;; centaur
-				 "<XF86Back>"    'centaur-tabs-backward     ;; cicle buffers backwards
-				 "<XF86Forward>" 'centaur-tabs-forward      ;; cicle buffers forward
-				 ;; cut,copy,paste,delete, rename
-				 "<XF86Cut>"     'clipboard-kill-region     ;; cut text
-				 "<XF86Copy>"    'clipboard-kill-ring-save  ;; copy text
-				 "<XF86Paste>"   'clipboard-yank            ;; yank text
-				 "<C-backspace>" 'my-backward-delete-word   ;; custom kill-ring
-				 "<f12>"         'rename-current-buffer-file ;;rename file
-				 ;; spelling
-				 "<f7>"          'flyspell-buffer           ;; flyspell buffer
-				 "<f8>"          'flyspell-correct-previous ;; flyspell previus
-				 "<f9>"          'flyspell-correct-next     ;; flyspell next
-				 "<f10>"         'ispell-change-dictionary  ;; change dictionary
-				 ;;
-				 "<mouse-9>"     'menu-bar-open             ;; open left mouse menu
-				 "C-x C-z"       'suspend-frame             ;; rebind suspend-frame
-				 "<C-tab>"       'hs-toggle-hiding          ;; toggle codeblock
-				 ;;windowmove
-				 "M-a"           'windmove-left             ;; window move left
-				 "M-d"           'windmove-right            ;; window move right
-				 "M-w"           'windmove-up               ;; window move up
-				 "M-s"           'windmove-down             ;; window move down
-				 ;; side panels
-				 "M-q"           'imenu-list-smart-toggle   ;; imenu
-				 "M-<ESC>"       'neotree-toggle            ;; neotree
-				 ;; ivy
-				 "C-c C-r"       'ivy-resume
-				 "C-x B"         'ivy-switch-buffer-other-window
-				 "C-x b"         'ivy-switch-buffer
-				 ;; C-z prefix
-				 "C-z z"         'indent-buffer             ;; indent buffer
-				 "C-z l"         'display-line-numbers-mode ;; line numbers
-				 ;;"M-<tab>"     'counsel-ibuffer           ;; switch buffer
-				 "M-<tab>"       'counsel-switch-buffer     ;; switch buffer
-				 "C-z C-b"       'counsel-switch-buffer     ;; interactive switch buffer
-				 "C-z i"         'counsel-imenu             ;; imenu
-				 "C-z r"         'counsel-recentf           ;; recent files
-				 ;; :keymaps 'markdown-mode-map
-				 ;; "M-p" nil
-				 ;; "M-n" nil
+     ;; ── Centaur tabs  (⌘{ / ⌘} — standard macOS tab cycling) ───────────────
+     "s-{"                    'centaur-tabs-backward    ;; ⌘{
+     "s-}"                    'centaur-tabs-forward     ;; ⌘}
 
-				 ;; goto-last
-				 "<XF86Tools>"   'goto-last-point
-				 ;; :keymaps 'org-mode-map
+     ;; ── Cut / Copy / Paste  (native ⌘X / ⌘C / ⌘V) ──────────────────────────
+     "s-x"                    'clipboard-kill-region
+     "s-c"                    'clipboard-kill-ring-save
+     "s-v"                    'clipboard-yank
+     "<C-backspace>"          'my-backward-delete-word
 
-				 ;; org-insert-structure-template)
-				 "C-c C-,"       'org-insert-structure-template
+     ;; ── File ops ────────────────────────────────────────────────────────────
+     "s-S-r"                  'rename-current-buffer-file  ;; ⌘⇧R rename
 
-				 ;; magit
-				 "C-x g"         'magit-status)))
+     ;; ── Spelling ────────────────────────────────────────────────────────────
+     "s-\\"                   'flyspell-buffer           ;; ⌘\  (chord fallback)
+     "s-["                    'flyspell-correct-previous ;; ⌘[
+     "s-]"                    'flyspell-correct-next     ;; ⌘]
+     "C-c s d"                'ispell-change-dictionary  ;; chord fallback
 
-	(if (eq system-type 'android)
-			(progn
-				(general-define-key
-				 :keymaps 'ivy-minibuffer-map
-				 "M-<tab>"  'keyboard-escape-quit
-				 "M-x"      'keyboard-escape-quit
-				 "<menu>"   'keyboard-escape-quit
-				 "<cancel>" 'keyboard-escape-quit)
+     ;; ── F11 / F12 volume keys — leave to macOS ──────────────────────────────
+     ;; Bind to ignore so Emacs does not beep when they fire in a focused frame.
+     "<XF86AudioLowerVolume>" 'ignore                   ;; F11 🔉 pass-through
+     "<XF86AudioRaiseVolume>" 'ignore                   ;; F12 🔊 pass-through
 
-				(general-define-key
-				 "<menu>" 'execute-extended-command  ;; M-x
-				 ))))
+     ;; ── Suspend / code fold ─────────────────────────────────────────────────
+     "C-x C-z"                'suspend-frame
+     "<C-tab>"                'hs-toggle-hiding         ;; toggle code block
+
+     ;; ── Window movement  (Option = Meta on Mac by default) ──────────────────
+     "M-a"                    'windmove-left
+     "M-d"                    'windmove-right
+     "M-w"                    'windmove-up
+     "M-s"                    'windmove-down
+
+     ;; ── Side panels ─────────────────────────────────────────────────────────
+     "M-q"                    'imenu-list-smart-toggle
+     "M-<ESC>"                'neotree-toggle
+
+     ;; ── Ivy ─────────────────────────────────────────────────────────────────
+     "C-c C-r"                'ivy-resume
+     "C-x B"                  'ivy-switch-buffer-other-window
+     "C-x b"                  'ivy-switch-buffer
+
+     ;; ── C-z prefix ──────────────────────────────────────────────────────────
+     "C-z z"                  'indent-buffer
+     "C-z l"                  'display-line-numbers-mode
+     "M-<tab>"                'counsel-switch-buffer
+     "C-z C-b"                'counsel-switch-buffer
+     "C-z i"                  'counsel-imenu
+     "C-z r"                  'counsel-recentf
+
+     ;; ── Goto-last  (⌘T, mirrors "go back" feel) ─────────────────────────────
+     "s-t"                    'goto-last-point          ;; ⌘T
+
+     ;; ── Org ─────────────────────────────────────────────────────────────────
+     "C-c C-,"                'org-insert-structure-template
+
+     ;; ── Magit ───────────────────────────────────────────────────────────────
+     "C-x g"                  'magit-status))))
 
 ;;; Alias
 ;; We don't want to type yes and no all the time so, do y and n
@@ -996,7 +1065,17 @@ This command does not push text to `kill-ring'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ignored-local-variable-values '((eval progn (outline-minor-mode 1) (hide-body))))
- '(package-selected-packages nil))
+ '(package-selected-packages
+	 '(all-the-icons amx async auto-package-update centaur-tabs
+									 clang-format company-box company-quickhelp counsel
+									 diminish doom-modeline doom-themes emacsql
+									 flycheck-pyflakes flycheck-rust
+									 flyspell-correct-ivy general goto-last-point
+									 htmlize imenu-list ivy-posframe ivy-rich json-mode
+									 lua-mode magit major-mode-hydra markdown-mode
+									 neotree org-bullets outshine php-mode
+									 rainbow-delimiters rainbow-mode rust-mode
+									 swift-mode vundo which-key writegood-mode yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

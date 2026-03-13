@@ -4,5 +4,5 @@
 * Projects
  A list of my personal projects
 + [[https://github.com/coliflor/knauel][Knauel]]
-+ [[https://github.com/coliflor/start][startpage]]
++ [[https://github.com/coliflor/startpage][startpage]]
 + [[https://github.com/coliflor/muro][muro]]
